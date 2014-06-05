@@ -1,0 +1,11 @@
+<launch>
+    <!-- Bagfiles -->
+    <include file="$(find probabilistic_basics)/launch/basics.launch"/>
+    
+    <!-- RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lab2_splitandmerge)/config/custom.rviz" output="screen"/>
+    
+    <!-- Split & Merge node-->
+    <node pkg="lab2_splitandmerge" type="node.py" name="splitandmerge" output="screen"/>
+    
+</launch>

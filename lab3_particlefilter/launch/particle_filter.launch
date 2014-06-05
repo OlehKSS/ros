@@ -1,0 +1,14 @@
+<launch>
+    <!-- Source data -->
+    <include file="$(find probabilistic_basics)/launch/basics.launch"/>
+    
+    <!-- RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find particle_filter)/config/custom.rviz" output="screen"/>
+    
+    <!-- Split & Merge node-->
+    <node pkg="lab2_splitandmerge" type="node.py" name="splitandmerge" output="screen"/>
+    
+    <!-- Particle Filter node-->
+    <node pkg="lab3_particlefilter" type="node.py" name="particle_filter" output="screen"/>
+    
+</launch>

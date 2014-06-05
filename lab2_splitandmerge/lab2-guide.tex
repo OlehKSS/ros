@@ -1,0 +1,99 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[UKenglish]{babel}
+\usepackage{fancyhdr}
+\usepackage{anysize}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{lastpage}
+\usepackage[all]{xy}  % drawings
+%\usepackage{listings} % code highlighting
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subfigure}
+
+\pagestyle{fancy}
+\fancyfoot[R]{\em \thepage / \pageref{LastPage}}
+\fancyfoot[C]{}
+\fancyfoot[L]{\em Master VIBOT}
+\fancyhead[R]{\em Lab2 - Line features with Split \& Merge}
+\fancyhead[C]{}
+\fancyhead[L]{\em Probabilistic Robotics}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%\,	 a small space
+%\:	 a medium space
+%\;	 a large space
+%\quad	 a really large space
+%\qquad	 a huge space
+%\!	 a negative space (moves things back to the left)
+        
+\begin{document}
+
+\marginsize{2cm}{2cm}{2cm}{2cm}
+
+% Title
+%\hspace{1mm}
+\begin{center}
+\Large \textbf{Lab2 - Line features with Split \& Merge}
+\end{center}
+%\hspace{1mm}
+
+\section{Introduction}
+
+This lab is designed to learn how to use extract line features from point data provided as points $(x,y)$ in the plane, that have been projected from a \texttt{sensor\_msgs/LaserScan} in the bagfile dataset. The Split \& Merge algorithm explained in the attached scientific paper will be the base of its implementation.
+
+The resulting algorithm will be used on the following labs as a base for feature extraction in Particle Filter, Extended Kalman Filter and Simultaneous Localization and MApping. 
+
+\section{Pre-lab}
+
+Read and understand the Split \& Merge algorithm explained in the attached paper. Instead of fitting a line to all points, we are going to implement the \emph{Iterative-End-Point-Fit} for its simplicity.
+
+Lines will be represented in the form \eqref{line} because simplifies operations.
+
+\begin{equation}
+    a x + b y + c = 0 \label{line}
+\end{equation}
+
+\noindent
+The questions for the prelab (answer in UdG moodle) are:
+
+\begin{itemize}
+    \item Given two points $(x_1, y_1)$ and $(x_2, y_2)$, compute the line parameters $(a,b,c)$.
+    \item Given a line $(a,b,c)$ and a point $(x,y)$ compute the distance from the point to the line.
+\end{itemize}
+
+\noindent
+Answer with a single formula containing only the given data.
+
+\section{Lab work}
+
+The folder named \texttt{splitandmerge} contains all necessary code for running this lab and a bagfile obtained from a turtlebot with \texttt{nav\_msgs/Odometry} and \texttt{sensor\_msgs/LaserScan} messages. Test the code by coping the folder in your workspace and running:
+
+\begin{verbatim}
+    roslaunch splitandmerge splitandmerge.launch
+\end{verbatim}
+
+As you can see the dummy Split \& Merge algorithm implemented, only provides lines from the first to the last point of each scan without any other computation. Also you can observe how
+the odometry is not perfect and the accumulation of the scans does not represent properly the map (Fig.~\ref{map}).
+
+\begin{center}
+	\includegraphics[width=0.50\textwidth]{lab2-scans}
+	\captionof{figure}{All points plotted with respect to odometry.}
+	\label{map}
+\end{center}
+
+For completing the lab you have to modify the file under \texttt{src} folder called \texttt{splitandmerge.py}. The functions that have to be modified are highlighted.
+
+For viewing properly each scan in Rviz, decrease the \texttt{LaserScan} decay time to 0, so it will only show the last published scan. Also change the fixed frame to \texttt{openni\_depth\_frame} to see the position of the robot fixed.
+
+\section{Optional}
+
+Represent all the lines that have been obtained by the Split \& Merge algorithm in a single image, showing the discrepancies caused by the odometry.
+
+\section{Lab report}
+
+Write a brief report (maximum 2 pages) explaining your solution and problems faced. Include the final \texttt{splitandmerge.py} file.
+
+\end{document}

@@ -1,0 +1,34 @@
+<launch>
+
+    <!-- Rosbag arguments -->
+    <arg name="frequency" default="1.0"/>
+    <arg name="pause"     default="false"/>
+    
+    <!-- Source (only one true or none for real robot) -->
+    <arg name="bagfile"   default="true"/>
+    <arg name="simulator" default="false"/>
+
+    <!-- Bagfile -->
+    <group if="$(arg bagfile)">
+        <!-- Use simulated time when working with bagfiles -->
+        <param name="use_sim_time" value="true" type="bool"/>
+        <group if="$(arg pause)">
+            <node pkg="rosbag" type="play" name="rosbag" args="$(find probabilistic_basics)/bags/scans_and_odom.bag --clock --pause -r $(arg frequency)"/>
+        </group>
+        <group unless="$(arg pause)">
+            <node pkg="rosbag" type="play" name="rosbag" args="$(find probabilistic_basics)/bags/scans_and_odom.bag --clock -r $(arg frequency)"/>
+        </group>
+    </group>
+    
+    <!-- No bagfile -->
+    <group unless="$(arg bagfile)">
+        <!-- Simulation -->
+        <group if="$(arg simulator)">
+            <include file="$(find probabilistic_basics)/launch/gazebo.launch"/>
+        </group>
+    </group>
+    
+    <!-- Incremental odometry -->
+    <node pkg="probabilistic_basics" type="incremental_odometry.py" name="inc_odom"/>
+    
+</launch>

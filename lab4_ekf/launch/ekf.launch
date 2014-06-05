@@ -1,0 +1,11 @@
+<launch>
+    <!-- Source data -->
+    <include file="$(find probabilistic_basics)/launch/basics.launch"/>
+    
+    <!-- RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lab4_ekf)/config/custom.rviz" output="screen"/>
+    
+    <!-- EKF node-->
+    <node pkg="lab4_ekf" type="node.py" name="ekf" output="screen"/>
+    
+</launch>
