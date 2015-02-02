@@ -132,11 +132,11 @@ Clone the repository of the Probabilistic labs in your workspace. This repositor
 \noindent
 Run the node in the turtle{\textunderscore}waypoint package: 
 \begin{verbatim}
-    rosrun turtle_waypoint turtle_waypoint.py
+    rosrun lab0_ros turtle_waypoint.py
 \end{verbatim}
 You will see that nothing happens. You need to modify the \emph{turtle{\textunderscore}waypoint.py} node inside the package in order to publish commands to the turtle to make it go to a desired point. This desired position will be specified when running the node through the command line like:
 \begin{verbatim}
- 	 rosrun turtle_waypoint turtle_waypoint.py 1.2 5.0
+ 	 rosrun lab0_ros turtle_waypoint.py 1.2 5.0
 \end{verbatim}
 being the desired point is x: 1.2, y: 5.0. If the point is not given when calling the node, the node will check the ROS parameter server for the parameters \emph{/default{\textunderscore}x} and \emph{/default{\textunderscore}y} and head to that point. In the case that the parameters are not set the turtle won't move. You can set ROS parameters like:
 \begin{verbatim}
