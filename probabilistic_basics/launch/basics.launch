@@ -8,18 +8,29 @@
     <arg name="bagfile"   default="true"/>
     <arg name="simulator" default="false"/>
 
+    <!-- Bagfile (only used if bagfile true) -->
+    <arg name="dataset2" default="true"/>
+    <arg if="$(arg dataset2)" name="bfName" default="$(find probabilistic_basics)/bags/dataset2.bag"/>
+    <arg unless="$(arg dataset2)" name="bfName" default="$(find probabilistic_basics)/bags/dataset1.bag"/>
+
     <!-- Bagfile -->
     <group if="$(arg bagfile)">
         <!-- Use simulated time when working with bagfiles -->
         <param name="use_sim_time" value="true" type="bool"/>
         <group if="$(arg pause)">
-            <node pkg="rosbag" type="play" name="rosbag" args="$(find probabilistic_basics)/bags/scans_and_odom.bag --clock --pause -r $(arg frequency)"/>
+            <node pkg="rosbag" type="play" name="rosbag" args="$(arg bfName) --clock --pause -r $(arg frequency)"/>
         </group>
         <group unless="$(arg pause)">
-            <node pkg="rosbag" type="play" name="rosbag" args="$(find probabilistic_basics)/bags/scans_and_odom.bag --clock -r $(arg frequency)"/>
+            <node pkg="rosbag" type="play" name="rosbag" args="$(arg bfName) --clock -r $(arg frequency)"/>
         </group>
     </group>
-    
+   <group if="$(arg dataset2)">
+        <node pkg="tf" type="static_transform_publisher" name="camera_tf_broadcaster" args="-0.087 0.013 0 0 0 0 1 base_footprint camera_depth_frame 100"/>
+    </group>
+    <group unless="$(arg dataset2)">
+        <node pkg="tf" type="static_transform_publisher" name="camera_tf_broadcaster" args="0 0 0 0 0 0 1 base_footprint camera_depth_frame 100"/>
+    </group>
+
     <!-- No bagfile -->
     <group unless="$(arg bagfile)">
         <!-- Simulation -->
