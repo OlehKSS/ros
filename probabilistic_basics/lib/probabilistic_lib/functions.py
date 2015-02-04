@@ -347,3 +347,32 @@ def polar2y(line,x):
     y0 = line[0]*sin
     m = -cos/sin
     return m*(x-x0) + y0
+    
+
+#===============================================================================
+def get_polar_line(line, odom = [0.0, 0.0, 0.0]):
+    '''
+    Transforms a line from [x1 y1 x2 y2] from the world frame to the
+    vehicle frame using odomotrey [x y ang].
+    Returns [range theta]
+    By default only transforms line to polar without translation.
+    '''
+    # Line points
+    x1 = line[0]
+    y1 = line[1]
+    x2 = line[2]
+    y2 = line[3]
+    
+    # Compute line (a, b, c) and range
+    line = np.array([y1-y2, x2-x1, x1*y2-x2*y1])
+    pt = np.array([odom[0], odom[1], 1])
+    dist = np.dot(pt, line) / np.linalg.norm(line[:2])
+    
+    # Compute angle
+    if dist < 0:
+        ang = np.arctan2(line[1], line[0])
+    else:
+        ang = np.arctan2(-line[1], -line[0])
+    
+    # Return in the vehicle frame
+    return np.array([np.abs(dist), angle_wrap(ang - odom[2])])
