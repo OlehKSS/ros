@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Basic imports
-import roslib
-roslib.load_manifest('lab2_splitandmerge')
+# Basic ROS
 import rospy
 
 # ROS messages

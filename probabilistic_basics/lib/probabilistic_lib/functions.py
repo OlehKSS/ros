@@ -19,7 +19,7 @@ from geometry_msgs.msg import Point, Quaternion, PoseArray, PoseStamped, Pose
 # Transformations
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
-############################################################################################################
+########################################################################
 def publish_uncertainty(p, pub_ellipse, x, y, z) :
     '''
     publish_uncertainty() publish a marker message containg the ellipse taht describes the uncertainty of the position of the robot.
@@ -51,7 +51,7 @@ def publish_uncertainty(p, pub_ellipse, x, y, z) :
     pub_ellipse.publish(ellipse)
 
 
-############################################################################################################
+########################################################################
 def publish_lines(lines, publisher, frame='/world', ns='none', time=None, color=(1,0,0)) :
     '''
     Publishes lines from an array of shape (N, 4) being N the number of lines.
@@ -86,7 +86,7 @@ def publish_lines(lines, publisher, frame='/world', ns='none', time=None, color=
     # Publish
     publisher.publish(msg)
 
-############################################################################################################
+########################################################################
 #def publish_scan_points(pub_scan_points,pointsWorldFrame) :
     #'''
     #publish_scan_points() publishes the laser scan in world frame
@@ -104,12 +104,13 @@ def publish_lines(lines, publisher, frame='/world', ns='none', time=None, color=
          #i+=1
     #pub_scan_points.publish(scan_points)
 
-############################################################################################################
+########################################################################
 def get_map(x=0, y=0, a=0):
     '''
     Retrieves the map with offsets [x y a] if necessary.
     Lines defined as [x1 y1 x2 y2].
     For the EKF x = 0.7841748 y = 0.313926 a = -0.03
+    This is the map for dataset1.bag
     '''
     lines = np.array([[0.00, 0.00, 0.00, 0.77],
                       [0.00, 0.77, 0.77, 0.77],
@@ -129,7 +130,7 @@ def get_map(x=0, y=0, a=0):
                          np.hstack(( np.zeros((2,2)), rot )) ))
     return np.dot(rotate, lines).T
 
-############################################################################################################
+########################################################################
 #def mat2str(s,m) :
     #'''
     #mat2str() is a function that prints a matrix in the way that it can be seen propperly
@@ -152,7 +153,7 @@ def get_map(x=0, y=0, a=0):
         #s = s+str(m[i,:])
     #return s
 
-############################################################################################################
+########################################################################
 def angle_wrap(a):
     '''
     Returns the angle a normalized between -pi and pi.
@@ -165,12 +166,15 @@ def angle_wrap(a):
         a[a > np.pi] -= 2 * np.pi
     return a
 
-############################################################################################################
+########################################################################
 def comp(a, b) :
     '''
-    comp(a,b) composes matrices a and b, being b the one that has to be transformed into a space.
+    Composes matrices a and b, being b the one that has to be
+    transformed into a space. Usually used to add the vehicle odometry
+    b = [x' y' theta'] in the vehicle frame, to the vehicle position 
+    a = [x y theta] in the world frame, returning world frame 
+    coordinates. 
     '''
-
     c1 = cos(a[2]) * b[0]  - sin(a[2]) * b[1] + a[0]
     c2 = sin(a[2]) * b[0]  + cos(a[2]) * b[1] + a[1]
     c3 = a[2] + b[2]
@@ -178,7 +182,19 @@ def comp(a, b) :
     C = np.array([c1, c2, c3])
     return C
     
-#===============================================================================
+########################################################################
+def state_inv(x):
+    '''
+    Inverse of a state vector.
+    '''
+    th = angle_wrap(-x[2])
+    sinth = sin(th)
+    costh = cos(th)
+    dx = costh*(-x[0]) - sinth * (-x[1])
+    dy = sinth*(-x[0]) + costh * (-x[1])
+    return np.array([dx, dy, th])
+    
+########################################################################
 def compInv(x):
     c3 = angle_wrap(-x[2])
     cc3 = cos(c3)
@@ -195,14 +211,14 @@ def compInv(x):
     J[1,2] = x[0]*cc3 - x[1]*sc3
     return np.array([c1,c2,c3]), J
     
-#===============================================================================
+########################################################################
 def yaw_from_quaternion(quat):
     '''
     Returns yaw extracted from a geometry_msgs.msg.Quaternion.
     '''
     return euler_from_quaternion([quat.x, quat.y, quat.z, quat.w])[2]
 
-#===============================================================================
+########################################################################
 def get_particle_msgs(p_filter, time):
     '''
     Creates messages to visualize particle filters.
@@ -261,45 +277,48 @@ def get_particle_msgs(p_filter, time):
     
     return msg, msg_mean, msg_odom, trans, rotat
 
-#===============================================================================
+########################################################################
 def get_ekf_msgs(ekf):
     '''
     Create following messages:
     1-Robot odometry
     2-Robot uncertainity
     '''
+    # Time
+    time = rospy.Time.now()
+    
     # Odometry
     msg_odom = Odometry()
-    msg_odom.header.stamp = rospy.Time.now()
+    msg_odom.header.stamp = time
     msg_odom.header.frame_id = '/world'
-    msg_odom.pose.pose.position.x= ekf.x_B_1[0]
-    msg_odom.pose.pose.position.y= ekf.x_B_1[1]
-    msg_odom.pose.pose.position.z= 0
-    quat = quaternion_from_euler(0, 0, ekf.x_B_1[2])
+    msg_odom.pose.pose.position.x = ekf.xk[0]
+    msg_odom.pose.pose.position.y = ekf.xk[1]
+    msg_odom.pose.pose.position.z = 0
+    quat = quaternion_from_euler(0, 0, ekf.xk[2])
     msg_odom.pose.pose.orientation.x = quat[0]
     msg_odom.pose.pose.orientation.y = quat[1]
     msg_odom.pose.pose.orientation.z = quat[2]
     msg_odom.pose.pose.orientation.w = quat[3]
         
-    #Uncertainity
+    # Uncertainity
     msg_ellipse = Marker()
     msg_ellipse.header.frame_id = "/world"
     msg_ellipse.header.stamp = rospy.Time.now()
     msg_ellipse.type = Marker.CYLINDER
-    msg_ellipse.pose.position.x = ekf.x_B_1[0]
-    msg_ellipse.pose.position.y = ekf.x_B_1[1]
-    msg_ellipse.pose.position.z = 0
+    msg_ellipse.pose.position.x = ekf.xk[0]
+    msg_ellipse.pose.position.y = ekf.xk[1]
+    msg_ellipse.pose.position.z = -0.05 # below others
     msg_ellipse.pose.orientation.x = 0
     msg_ellipse.pose.orientation.y = 0
     msg_ellipse.pose.orientation.z = 0
     msg_ellipse.pose.orientation.w = 1
-    msg_ellipse.scale.x = ekf.P_B_1[0,0]
-    msg_ellipse.scale.y = ekf.P_B_1[1,1]
-    msg_ellipse.scale.z = 0.01
-    msg_ellipse.color.a = 0.3
+    msg_ellipse.scale.x = 2.45*sqrt(ekf.Pk[0,0])
+    msg_ellipse.scale.y = 2.45*sqrt(ekf.Pk[1,1])
+    msg_ellipse.scale.z = 0.02
+    msg_ellipse.color.a = 1.0
     msg_ellipse.color.r = 0.0
-    msg_ellipse.color.g = 1.0
-    msg_ellipse.color.b = 1.0
+    msg_ellipse.color.g = 0.7
+    msg_ellipse.color.b = 0.7
     
     # TF
     trans = (msg_odom.pose.pose.position.x, 
@@ -310,32 +329,33 @@ def get_ekf_msgs(ekf):
              msg_odom.pose.pose.orientation.z,
              msg_odom.pose.pose.orientation.w)
          
-    # Reconstruct the map to visualize
+    # Reconstruct the map to visualize (if is SLAM)
     room_map_polar = np.zeros((0,2))
     room_map_points = np.zeros((0,4))
-    for i in range(0,ekf.get_number_of_features_in_map()):
-        if ekf.featureObservedN.shape[0] == 0 or ekf.featureObservedN[i] >= ekf.min_observations:
-            rho = ekf.x_B_1[2*i+3]
-            phi = ekf.x_B_1[2*i+4]
-            plline = np.array([rho,phi])
-            room_map_polar = np.vstack([room_map_polar,plline])
-            aux = np.zeros((1,4))
-            if np.abs(np.abs(phi)-np.pi/2)<np.deg2rad(45):
-                # Horizontal line
-                aux[0,0] = -1
-                aux[0,2] = 5
-            else:
-                # Vertical line
-                aux[0,0] = rho-1.5
-                aux[0,2] = rho+1.5
-        
-            aux[0,1] = polar2y(plline,aux[0,0])
-            aux[0,3] = polar2y(plline,aux[0,2])
-            room_map_points = np.vstack([room_map_points,aux])
+    if hasattr(ekf, 'get_number_of_features_in_map'):
+        for i in range(0, ekf.get_number_of_features_in_map()):
+            if ekf.featureObservedN.shape[0] == 0 or ekf.featureObservedN[i] >= ekf.min_observations:
+                rho = ekf.xk[2*i+3]
+                phi = ekf.xk[2*i+4]
+                plline = np.array([rho,phi])
+                room_map_polar = np.vstack([room_map_polar,plline])
+                aux = np.zeros((1,4))
+                if np.abs(np.abs(phi)-np.pi/2)<np.deg2rad(45):
+                    # Horizontal line
+                    aux[0,0] = -1
+                    aux[0,2] = 5
+                else:
+                    # Vertical line
+                    aux[0,0] = rho-1.5
+                    aux[0,2] = rho+1.5
+            
+                aux[0,1] = polar2y(plline,aux[0,0])
+                aux[0,3] = polar2y(plline,aux[0,2])
+                room_map_points = np.vstack([room_map_points,aux])
         
     return msg_odom, msg_ellipse, trans, rotat, room_map_points
     
-#===============================================================================
+########################################################################
 def polar2y(line,x):
     '''
     given a line in polar coordinates and the x value of a point computes 
@@ -349,7 +369,7 @@ def polar2y(line,x):
     return m*(x-x0) + y0
     
 
-#===============================================================================
+########################################################################
 def get_polar_line(line, odom = [0.0, 0.0, 0.0]):
     '''
     Transforms a line from [x1 y1 x2 y2] from the world frame to the
