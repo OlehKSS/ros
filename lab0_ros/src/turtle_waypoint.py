@@ -44,7 +44,7 @@ def waypoint():
 	finished=False
 	#If the point hasn't been specified in a command line:
 	if(len(sys.argv)!=3):
-		print('X and Y values not set or not passed. Correctly. Looking for default parameters.')
+		print('X and Y values not set or not passed correctly. Looking for default parameters.')
 		#TODO: If ROS parameters default_x and default_y exist:
 		if True: #Change this for the correct expression
 			#TODO: Save them into this variables
