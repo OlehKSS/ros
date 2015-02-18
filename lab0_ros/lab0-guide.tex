@@ -87,7 +87,7 @@ Now that we have Ubuntu and ROS successfully installed, please follow the most f
     \url{http://wiki.ros.org/ROS/Tutorials/ExaminingPublisherSubscriber}
 \end{itemize}
 \noindent
-Please note that the ROS Cheat Sheet, you can find in the files for this Lab might be useful for you.
+Please note that the ROS Cheat Sheet, which you can find in the files for this Lab, might be useful for you.
 
 \subsection{Turtlesim Waypoint Node}
 During the Lab session you will need to create a node to interact with the turtle simulator seen in Understanding ROS nodes tutorial.
@@ -111,7 +111,7 @@ In a new terminal:
 And using the ROS tools you’ve seen in the tutorials (rostopic, rosmsg, rqt{\textunderscore}graph) identify:
 \begin{enumerate}
     \item The name of the topic used to send velocity commands to the turtle and the type of these messages.
-    \item The name of the topic where the turtle position it is published at, and the type of these messages.
+    \item The name of the topic where the turtle position is published at, and the type of these messages.
 \end{enumerate}
 
 \noindent
@@ -138,7 +138,7 @@ You will see that nothing happens. You need to modify the \emph{turtle{\textunde
 \begin{verbatim}
  	 rosrun lab0_ros turtle_waypoint.py 1.2 5.0
 \end{verbatim}
-being the desired point is x: 1.2, y: 5.0. If the point is not given when calling the node, the node will check the ROS parameter server for the parameters \emph{/default{\textunderscore}x} and \emph{/default{\textunderscore}y} and head to that point. In the case that the parameters are not set the turtle won't move. You can set ROS parameters like:
+being the desired point x: 1.2 and y: 5.0. If the point is not given when calling the node, the node will check the ROS parameter server for the parameters \emph{/default{\textunderscore}x} and \emph{/default{\textunderscore}y} and head to that point. In the case the parameters are not set the turtle won't move. You can set ROS parameters like:
 \begin{verbatim}
     rosparam set default_x 5
     rosparam set default_y 10
