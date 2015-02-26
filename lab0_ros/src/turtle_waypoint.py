@@ -22,6 +22,7 @@ tolerance=0.1
 gotPosition=False
 
 def callback(pose_msg):
+	global x,y,theta,gotPosition
 	#TODO:Store the position in x,y and theta variables.
 	##
 	##
