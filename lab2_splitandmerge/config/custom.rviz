@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Frames1
-        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 539
   - Class: rviz/Selection
@@ -58,8 +57,6 @@ Visualization Manager:
           Value: true
         camera_depth_frame:
           Value: true
-        odom:
-          Value: true
         world:
           Value: true
       Marker Scale: 1
@@ -68,11 +65,10 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          world:
-            base_footprint:
-              camera_depth_frame:
-                {}
+        world:
+          base_footprint:
+            camera_depth_frame:
+              {}
       Update Interval: 0
       Value: true
     - Class: rviz/Axes
@@ -151,7 +147,7 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 91.2657
+      Scale: 87.925
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
       X: 2.26378
@@ -188,4 +184,4 @@ Window Geometry:
     collapsed: false
   Width: 1278
   X: 58
-  Y: 25
+  Y: 37

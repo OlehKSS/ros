@@ -3,6 +3,6 @@
 *.aux
 *.log
 *.gz
-*_solved.py
+*_solved*
 *.out
 *_old.py
