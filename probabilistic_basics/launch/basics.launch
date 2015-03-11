@@ -28,9 +28,7 @@
         <node pkg="tf" type="static_transform_publisher" name="camera_tf_broadcaster" args="-0.087 0.013 0 0 0 0 1 base_footprint camera_depth_frame 100"/>
     </group>
     <group unless="$(arg dataset2)">
-<!--
         <node pkg="tf" type="static_transform_publisher" name="camera_tf_broadcaster" args="0 0 0 0 0 0 1 base_footprint camera_depth_frame 100"/>
--->
     </group>
 
     <!-- No bagfile -->
