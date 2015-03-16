@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from probabilistic_lib.functions import angle_wrap
+from probabilistic_lib.functions import angle_wrap, get_polar_line
 
 #===============================================================================
 class ParticleFilter(object):
@@ -86,13 +86,13 @@ class ParticleFilter(object):
             # Transform map lines to local frame and to [range theta]
             #
             #for j in range(self.map.shape[0]):
-                # ... self.get_polar_line(...)
+                # ... get_polar_line(...)
                 
             # Transform measured lines to [range theta] and weight them
             #
             #for j in range(lines.shape[0]):
                 #
-                # ... self.get_polar_line(...)
+                # ... get_polar_line(...)
                 #
                 # Weight them
                 #
@@ -149,30 +149,3 @@ class ParticleFilter(object):
                           np.sum(self.p_wei * np.cos(self.p_ang)) / np.sum(self.p_wei) )
                           
         return np.array([mean[0], mean[1], ang])
-        
-    #===========================================================================
-    def get_polar_line(self, line, odom):
-        '''
-        Transforms a line from [x1 y1 x2 y2] from the world frame to the
-        vehicle frame using odomotrey [x y ang].
-        Returns [range theta]
-        '''
-        # Line points
-        x1 = line[0]
-        y1 = line[1]
-        x2 = line[2]
-        y2 = line[3]
-        
-        # Compute line (a, b, c) and range
-        line = np.array([y1-y2, x2-x1, x1*y2-x2*y1])
-        pt = np.array([odom[0], odom[1], 1])
-        dist = np.dot(pt, line) / np.linalg.norm(line[:2])
-        
-        # Compute angle
-        if dist > 0:
-            ang = np.arctan2(line[1], line[0])
-        else:
-            ang = np.arctan2(-line[1], -line[0])
-        
-        # Return in the vehicle frame
-        return np.array([np.abs(dist), angle_wrap(ang - odom[2])])

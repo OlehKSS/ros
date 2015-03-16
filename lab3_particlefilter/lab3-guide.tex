@@ -57,10 +57,10 @@ Review the particle filter explained on lectures and write the prediction step i
 %===============================================================================
 \section{Lab work}
 
-The folder named \texttt{particle\_filter} contains the code for running this lab and a bagfile obtained from a turtlebot with \texttt{nav\_msgs/Odometry} and \texttt{sensor\_msgs/LaserScan} messages. You need to copy your \texttt{splitandmerge.py} solution into the \texttt{src/} folder. Then you can test the code by coping the folder in your workspace and running:
+The folder named \texttt{lab3\_particlefilter} contains the code for running this lab. Your solution of the previous lab \texttt{lab2\_splitandmerge} will be called to provide the lines input for the particle filter localization. You can test the code by running:
 
 \begin{verbatim}
-    roslaunch particle_filter particle_filter.launch
+    roslaunch lab3_particlefilter particle_filter.launch
 \end{verbatim}
 
 As you can see the dummy Particle Filter algorithm implemented, only initializes the particles along the extension of the map, nothing else. The three parts of the filter that must be implemented are:
@@ -101,6 +101,6 @@ Improve the localization by taking into account if the segments extracted from t
 %===============================================================================
 \section{Lab report}
 
-Write a brief report (maximum 2 pages) explaining your solution and problems faced. Include the final code.
+Write a brief report (maximum 2 pages) explaining your solution and problems faced. Include the final code in the zip file (not in the report).
 
 \end{document}
