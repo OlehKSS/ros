@@ -1,14 +1,16 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 78
+    Help Height: 81
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Grid1
         - /TF1/Frames1
         - /TF1/Tree1
         - /Lines1/Namespaces1
+        - /Odom Mean particle1
       Splitter Ratio: 0.5
-    Tree Height: 559
+    Tree Height: 225
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -33,10 +35,10 @@ Visualization Manager:
   Class: ""
   Displays:
     - Alpha: 0.5
-      Cell Size: 0.5
+      Cell Size: 0.1
       Class: rviz/Grid
       Color: 160; 160; 164
-      Enabled: false
+      Enabled: true
       Line Style:
         Line Width: 0.03
         Value: Lines
@@ -47,9 +49,9 @@ Visualization Manager:
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 10
+      Plane Cell Count: 200
       Reference Frame: <Fixed Frame>
-      Value: false
+      Value: true
     - Class: rviz/TF
       Enabled: false
       Frame Timeout: 15
@@ -113,129 +115,7 @@ Visualization Manager:
       Marker Topic: /lines_mean
       Name: LinesMean
       Namespaces:
-        scan_lines_mean100: true
-        scan_lines_mean101: true
-        scan_lines_mean102: true
-        scan_lines_mean103: true
-        scan_lines_mean104: true
-        scan_lines_mean105: true
-        scan_lines_mean106: true
-        scan_lines_mean107: true
-        scan_lines_mean108: true
-        scan_lines_mean109: true
-        scan_lines_mean110: true
-        scan_lines_mean111: true
-        scan_lines_mean112: true
-        scan_lines_mean113: true
-        scan_lines_mean114: true
-        scan_lines_mean115: true
-        scan_lines_mean116: true
-        scan_lines_mean117: true
-        scan_lines_mean118: true
-        scan_lines_mean119: true
-        scan_lines_mean120: true
-        scan_lines_mean121: true
-        scan_lines_mean122: true
-        scan_lines_mean123: true
-        scan_lines_mean124: true
-        scan_lines_mean125: true
-        scan_lines_mean126: true
-        scan_lines_mean127: true
-        scan_lines_mean128: true
-        scan_lines_mean129: true
-        scan_lines_mean130: true
-        scan_lines_mean131: true
-        scan_lines_mean132: true
-        scan_lines_mean133: true
-        scan_lines_mean134: true
-        scan_lines_mean135: true
-        scan_lines_mean136: true
-        scan_lines_mean14: true
-        scan_lines_mean15: true
-        scan_lines_mean16: true
-        scan_lines_mean17: true
-        scan_lines_mean18: true
-        scan_lines_mean19: true
-        scan_lines_mean20: true
-        scan_lines_mean21: true
-        scan_lines_mean22: true
-        scan_lines_mean23: true
-        scan_lines_mean24: true
-        scan_lines_mean25: true
-        scan_lines_mean26: true
-        scan_lines_mean27: true
-        scan_lines_mean28: true
-        scan_lines_mean29: true
-        scan_lines_mean30: true
-        scan_lines_mean31: true
-        scan_lines_mean32: true
-        scan_lines_mean33: true
-        scan_lines_mean34: true
-        scan_lines_mean35: true
-        scan_lines_mean36: true
-        scan_lines_mean37: true
-        scan_lines_mean38: true
-        scan_lines_mean39: true
-        scan_lines_mean40: true
-        scan_lines_mean41: true
-        scan_lines_mean42: true
-        scan_lines_mean43: true
-        scan_lines_mean44: true
-        scan_lines_mean45: true
-        scan_lines_mean46: true
-        scan_lines_mean47: true
-        scan_lines_mean48: true
-        scan_lines_mean49: true
-        scan_lines_mean50: true
-        scan_lines_mean51: true
-        scan_lines_mean52: true
-        scan_lines_mean53: true
-        scan_lines_mean54: true
-        scan_lines_mean55: true
-        scan_lines_mean56: true
-        scan_lines_mean57: true
-        scan_lines_mean58: true
-        scan_lines_mean59: true
-        scan_lines_mean60: true
-        scan_lines_mean61: true
-        scan_lines_mean62: true
-        scan_lines_mean63: true
-        scan_lines_mean64: true
-        scan_lines_mean65: true
-        scan_lines_mean66: true
-        scan_lines_mean67: true
-        scan_lines_mean68: true
-        scan_lines_mean69: true
-        scan_lines_mean70: true
-        scan_lines_mean71: true
-        scan_lines_mean72: true
-        scan_lines_mean73: true
-        scan_lines_mean74: true
-        scan_lines_mean75: true
-        scan_lines_mean76: true
-        scan_lines_mean77: true
-        scan_lines_mean78: true
-        scan_lines_mean79: true
-        scan_lines_mean80: true
-        scan_lines_mean81: true
-        scan_lines_mean82: true
-        scan_lines_mean83: true
-        scan_lines_mean84: true
-        scan_lines_mean85: true
-        scan_lines_mean86: true
-        scan_lines_mean87: true
-        scan_lines_mean88: true
-        scan_lines_mean89: true
-        scan_lines_mean90: true
-        scan_lines_mean91: true
-        scan_lines_mean92: true
-        scan_lines_mean93: true
-        scan_lines_mean94: true
-        scan_lines_mean95: true
-        scan_lines_mean96: true
-        scan_lines_mean97: true
-        scan_lines_mean98: true
-        scan_lines_mean99: true
+        scan_lines_mean: true
       Queue Size: 2
       Value: true
     - Class: rviz/Marker
@@ -248,7 +128,7 @@ Visualization Manager:
       Value: true
     - Arrow Length: 0.1
       Class: rviz/PoseArray
-      Color: 255; 0; 0
+      Color: 255; 255; 0
       Enabled: true
       Name: Particles
       Topic: /particles
@@ -269,13 +149,23 @@ Visualization Manager:
       Value: true
     - Angle Tolerance: 0.1
       Class: rviz/Odometry
-      Color: 170; 0; 255
+      Color: 0; 0; 255
       Enabled: true
       Keep: 500
       Length: 0.2
       Name: Odom Mean particle
       Position Tolerance: 0.1
       Topic: /mean_particle_odom
+      Value: true
+    - Angle Tolerance: 0.05
+      Class: rviz/Odometry
+      Color: 255; 25; 0
+      Enabled: true
+      Keep: 100
+      Length: 0.2
+      Name: Odometry
+      Position Tolerance: 0.05
+      Topic: /odom
       Value: true
   Enabled: true
   Global Options:
@@ -309,11 +199,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 140.786
+      Scale: 102.601
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 2.32798
-      Y: 1.71826
+      X: 2.63911
+      Y: 1.548
     Saved:
       - Angle: 0
         Class: rviz/TopDownOrtho
@@ -332,10 +222,10 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1002
+  Height: 719
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000013c00000358fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000035000002b9000000b600fffffffb0000000a0056006900650077007301000002f4000000990000009900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000358fc0200000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004fe0000003efc0100000002fb0000000800540069006d00650100000000000004fe0000023600fffffffb0000000800540069006d00650100000000000004500000000000000000000003bc0000035800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000013c0000022cfc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000004100000173000000e300fffffffb0000000a0056006900650077007301000001ba000000b3000000b300fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000358fc0200000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005560000003efc0100000002fb0000000800540069006d0065010000000000000556000002f600fffffffb0000000800540069006d00650100000000000004500000000000000000000004140000022c00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -344,6 +234,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1278
+  Width: 1366
   X: 0
-  Y: 25
+  Y: 0
