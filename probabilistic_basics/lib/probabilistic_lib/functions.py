@@ -229,6 +229,15 @@ def get_particle_msgs(p_filter, time):
     msg = PoseArray()
     msg.header.stamp = time
     msg.header.frame_id = '/world'
+    
+    # Weights as spheres
+    msg_weight = MarkerArray()
+    idx = 0
+    wmax = p_filter.p_wei.max()
+    wmin = p_filter.p_wei.min()
+    if wmax == wmin:
+        wmin = 0.0
+    
     for i in range(p_filter.num):
         
         # Pose
@@ -244,6 +253,36 @@ def get_particle_msgs(p_filter, time):
         
         # Append
         msg.poses.append(m)
+        
+        # Marker constant
+        marker = Marker()
+        marker.header.frame_id = "world";
+        marker.header.stamp = time
+        marker.ns = "weights"
+        marker.type = marker.SPHERE
+        marker.action = marker.ADD
+        marker.color.a = 0.5
+        marker.color.r = 1.0
+        marker.color.g = 0.55
+        marker.color.b = 0.0
+    
+        # MArker variable
+        marker.id = idx;
+        marker.pose.position.x = p_filter.p_xy[0, i]
+        marker.pose.position.y = p_filter.p_xy[1, i]
+        marker.pose.position.z = 0;
+        marker.pose.orientation.x = quat[0]
+        marker.pose.orientation.y = quat[1]
+        marker.pose.orientation.z = quat[2]
+        marker.pose.orientation.w = quat[3]
+        
+        scale = 0.005 + 0.08 *(p_filter.p_wei[i] - wmin) / (wmax - wmin)
+        marker.scale.x = scale
+        marker.scale.y = scale
+        marker.scale.z = 0.02
+        
+        idx += 1
+        msg_weight.markers.append(marker)
         
     # Pose Stamped
     msg_mean = PoseStamped()
@@ -275,7 +314,7 @@ def get_particle_msgs(p_filter, time):
              msg_odom.pose.pose.orientation.z,
              msg_odom.pose.pose.orientation.w)
     
-    return msg, msg_mean, msg_odom, trans, rotat
+    return msg, msg_mean, msg_odom, trans, rotat, msg_weight
 
 ########################################################################
 def get_ekf_msgs(ekf):

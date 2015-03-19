@@ -7,7 +7,7 @@ import tf
 
 # ROS messages
 from geometry_msgs.msg import Point, PoseArray, PoseStamped
-from visualization_msgs.msg import Marker
+from visualization_msgs.msg import Marker, MarkerArray
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 
@@ -40,12 +40,13 @@ class LocalizationNode(object):
         self.lock = threading.RLock()
         
         # Publishers
-        self.pub_map = rospy.Publisher("map", Marker)
-        self.pub_lines = rospy.Publisher("lines", Marker)
-        self.pub_lines_mean = rospy.Publisher("lines_mean", Marker)
-        self.pub_particles = rospy.Publisher("particles", PoseArray)
-        self.pub_big_particle = rospy.Publisher("mean_particle", PoseStamped)
-        self.pub_odom = rospy.Publisher("mean_particle_odom", Odometry)
+        self.pub_map = rospy.Publisher("map", Marker, queue_size = 2)
+        self.pub_lines = rospy.Publisher("lines", Marker, queue_size = 2)
+        self.pub_lines_mean = rospy.Publisher("lines_mean", Marker, queue_size = 2)
+        self.pub_particles = rospy.Publisher("particles", PoseArray, queue_size = 2)
+        self.pub_big_particle = rospy.Publisher("mean_particle", PoseStamped, queue_size = 2)
+        self.pub_odom = rospy.Publisher("mean_particle_odom", Odometry, queue_size = 2)
+        self.pub_wei = rospy.Publisher("weights", MarkerArray, queue_size = 2)
         
         # Subscribers
         self.sub_scan = rospy.Subscriber("lines", Marker,  self.laser_callback)
@@ -212,11 +213,12 @@ class LocalizationNode(object):
                           color=(0,1,0))
             
             # Particles and biggest weighted particle
-            msg, msg_mean, msg_odom, trans, rot = get_particle_msgs(self.part_filter,
+            msg, msg_mean, msg_odom, trans, rot, msg_wei = get_particle_msgs(self.part_filter,
                                                                     time)
             self.pub_particles.publish(msg)
             self.pub_big_particle.publish(msg_mean)
             self.pub_odom.publish(msg_odom)
+            self.pub_wei.publish(msg_wei)
             self.tfBroad.sendTransform(translation = trans,
                                        rotation = rot, 
                                        time = time,
