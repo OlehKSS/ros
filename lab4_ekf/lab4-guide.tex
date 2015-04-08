@@ -57,7 +57,7 @@ The EKF map based localization is based on two different steps, prediction and u
 
 \section{Pre-lab}
 
-Read and understand all the guide for this Lab and look about the EKF algorithm in your lecture slides. The pre-lab is the equations for the update step where you need to transform world referenced lines $(\rho_w, \varphi_w)$ of the known map to robot referenced lines $(\rho_r, \varphi_r)$ (look at Fig.~\ref{ex}).
+Read and understand all the guide for this Lab and look about the EKF algorithm in your lecture slides. The pre-lab consists in finding the equations for the update step, where you need to transform world referenced lines $(\rho_w, \varphi_w)$ of the known map to robot referenced lines $(\rho_r, \varphi_r)$ (look at Fig.~\ref{ex}).
 
 Define the expected measurement equations $h(x_{k|k-1})$ and calculate the jacobian $H$ of the expected measurement with respect to the robot state $x_{k|k-1}$.
 \begin{center}
@@ -70,12 +70,12 @@ You can write them in paper and attach a picture in the online form submission.
 
 \section{Lab work}
 
-The ROS package named \texttt{lab4\_ekf} contains the skeleton code for running this lab. The input messages are \texttt{nav\_msgs/Odometry} and \texttt{sensor\_msgs/LaserScan}. You can test the code by running:
+The ROS package named \texttt{lab4\_ekf} contains the skeleton code for running this lab. The input messages are odometries from the turtlebot (\texttt{nav\_msgs/Odometry}) and lines coming from the Split and Merge algorithm (\texttt{visualization\_msgs/Marker}). You can test the code by running:
 \begin{verbatim}
     roslaunch lab4_ekf ekf.launch
 \end{verbatim}
 \noindent
-As you can see in Rviz that the robot doesn't move at all. You will need to complete the code inside the \texttt{ekf\_localization.py} file in order to complete properly the EKF Localization algorithm. No changes are needed in the \texttt{node.py}. Remember that you have useful functions in the library \texttt{functions.py}. If you think you need to modify any of these files ask your lab assistant first. The EKF algorithm goes as follows:
+As you can see in Rviz that the robot doesn't move at all. The original data from the robot can be seen in red and the filtered one in blue. You will need to complete the code inside the \texttt{ekf\_localization.py} file in order to complete properly the EKF Localization algorithm. No changes are needed in the \texttt{node.py}. Remember that you have useful functions in the library \texttt{functions.py}. If you think you need to modify any of these files ask your lab assistant first. The EKF algorithm goes as follows:
 \begin{align*} \scriptsize
     & \blacktriangleright \textit{\textbf{Pose initialization}}\\
     & x_0 = \hat{x}_0 \\

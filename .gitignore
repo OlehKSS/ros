@@ -6,4 +6,6 @@
 *_solved*
 *.out
 *_old.py
+*_sol.py
+*_lab.py
 *~
