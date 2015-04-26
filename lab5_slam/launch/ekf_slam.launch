@@ -1,10 +1,24 @@
 <launch>
 
+    <!-- Arguments -->
+    <arg name="rviz" default="true"/>
+
     <!-- Source data -->
-    <include file="$(find probabilistic_basics)/launch/basics.launch"/>
+    <include file="$(find probabilistic_basics)/launch/basics.launch">
+        <!-- Rosbag arguments -->
+        <arg name="frequency" default="1.0"/>
+        <arg name="pause"     default="false"/>
+      
+        <!-- Source (only one true or none for real robot) -->
+        <arg name="bagfile"   default="true"/>
+        <arg name="simulator" default="false"/>
+    
+        <!-- Bagfile (only used if bagfile true) -->
+        <arg name="dataset2" default="false"/>
+     </include>
     
     <!-- RViz -->
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lab5_slam)/config/custom.rviz" output="screen"/>
+    <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find lab5_slam)/config/custom.rviz" output="screen"/>
     
     <!-- EKF node-->
     <node pkg="lab5_slam" type="node.py" name="ekf_slam" output="screen"/>
