@@ -217,6 +217,13 @@ def yaw_from_quaternion(quat):
     Returns yaw extracted from a geometry_msgs.msg.Quaternion.
     '''
     return euler_from_quaternion([quat.x, quat.y, quat.z, quat.w])[2]
+    
+########################################################################
+def quaternion_from_yaw(yaw):
+    '''
+    Returns yaw extracted from a geometry_msgs.msg.Quaternion.
+    '''
+    return quaternion_from_euler(0.0, 0.0, yaw)
 
 ########################################################################
 def get_particle_msgs(p_filter, time):
@@ -340,6 +347,10 @@ def get_ekf_msgs(ekf):
     msg_odom.pose.pose.orientation.w = quat[3]
         
     # Uncertainity
+    uncert = ekf.Pk[:2,:2].copy()
+    val, vec = np.linalg.eig(uncert)
+    yaw = np.arctan2(vec[1,0], vec[0,0])
+    quat = quaternion_from_yaw(yaw)
     msg_ellipse = Marker()
     msg_ellipse.header.frame_id = "/world"
     msg_ellipse.header.stamp = rospy.Time.now()
@@ -347,12 +358,12 @@ def get_ekf_msgs(ekf):
     msg_ellipse.pose.position.x = ekf.xk[0]
     msg_ellipse.pose.position.y = ekf.xk[1]
     msg_ellipse.pose.position.z = -0.05 # below others
-    msg_ellipse.pose.orientation.x = 0
-    msg_ellipse.pose.orientation.y = 0
-    msg_ellipse.pose.orientation.z = 0
-    msg_ellipse.pose.orientation.w = 1
-    msg_ellipse.scale.x = 2.45*sqrt(ekf.Pk[0,0])
-    msg_ellipse.scale.y = 2.45*sqrt(ekf.Pk[1,1])
+    msg_ellipse.pose.orientation.x = quat[0]
+    msg_ellipse.pose.orientation.y = quat[1]
+    msg_ellipse.pose.orientation.z = quat[2]
+    msg_ellipse.pose.orientation.w = quat[3]
+    msg_ellipse.scale.x = 2.45*sqrt(val[0])
+    msg_ellipse.scale.y = 2.45*sqrt(val[1])
     msg_ellipse.scale.z = 0.02
     msg_ellipse.color.a = 1.0
     msg_ellipse.color.r = 0.0
