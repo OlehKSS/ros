@@ -27,7 +27,7 @@ class SplitAndMergeNode(object):
         Initializes publishers and subscribers.
         '''
         # Publishers
-        self.pub_line = rospy.Publisher("lines", Marker)
+        self.pub_line = rospy.Publisher("lines", Marker, queue_size=0)
         
         # Subscribers
         self.sub_scan = rospy.Subscriber("scan", LaserScan, self.laser_callback)
