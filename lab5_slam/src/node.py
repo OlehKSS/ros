@@ -44,12 +44,12 @@ class LocalizationNode(object):
         self.robotToSensor = np.array([xs,ys,thetas])        
         
         # Publishers
-        self.pub_lines = rospy.Publisher("ekf_lines", Marker)
-        self.pub_map = rospy.Publisher("map", Marker)
-        self.pub_map_gt = rospy.Publisher("map_gt", Marker)
-        self.pub_odom = rospy.Publisher("predicted_odom", Odometry)
-        self.pub_uncertainity = rospy.Publisher("uncertainity",  Marker)
-        self.pub_laser = rospy.Publisher("ekf_laser",  LaserScan)
+        self.pub_lines = rospy.Publisher("ekf_lines", Marker, queue_size=0)
+        self.pub_map = rospy.Publisher("map", Marker, queue_size=0)
+        self.pub_map_gt = rospy.Publisher("map_gt", Marker, queue_size=0)
+        self.pub_odom = rospy.Publisher("predicted_odom", Odometry, queue_size=0)
+        self.pub_uncertainity = rospy.Publisher("uncertainity",  Marker, queue_size=0)
+        self.pub_laser = rospy.Publisher("ekf_laser",  LaserScan, queue_size=0)
         
         # Subscribers
         self.sub_scan = rospy.Subscriber("scan", LaserScan, self.laser_callback)

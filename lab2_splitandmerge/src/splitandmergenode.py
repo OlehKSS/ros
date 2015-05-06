@@ -27,7 +27,8 @@ class SplitAndMergeNode(object):
         Initializes publishers and subscribers.
         '''
         # Publishers
-        self.pub_line = rospy.Publisher("lines", Marker)
+        self.pub_line = rospy.Publisher("lines", Marker,queue_size=0)
+        self.pub_laser = rospy.Publisher("scan_cut",LaserScan,queue_size=0)
         
         # Subscribers
         self.sub_scan = rospy.Subscriber("scan", LaserScan, self.laser_callback)
@@ -43,6 +44,9 @@ class SplitAndMergeNode(object):
         ang = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
         points = np.vstack((rng * np.cos(ang),
                             rng * np.sin(ang)))
+        
+        msg.range_max = 3
+        self.pub_laser.publish(msg)
                             
         # Filter long ranges
         points = points[:, rng < msg.range_max]
