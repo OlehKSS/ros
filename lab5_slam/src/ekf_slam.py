@@ -14,7 +14,7 @@ class EKF_SLAM(object):
     '''
     
     #========================================================================
-    def __init__(self, x0, y0, theta0, odom_lin_sigma, 
+    def __init__(self, x0,y0,theta0, odom_lin_sigma, 
                  odom_ang_sigma, meas_rng_noise, meas_ang_noise):
         '''
         Initializes the ekf filter
@@ -44,8 +44,8 @@ class EKF_SLAM(object):
         self.Rk[1,1] = self.meas_ang_noise
         
         # State vector initialization
-        self.x_B_1 = np.array([x0,y0,theta0]) # Position
-        self.P_B_1 = np.zeros((3,3)) # Uncertainty
+        self.xk = np.array([x0,y0,theta0]) # Position
+        self.Pk = np.zeros((3,3)) # Uncertainty
         
         # Initialize buffer for forcing observing n times a feature before 
         # adding it to the map
@@ -57,7 +57,7 @@ class EKF_SLAM(object):
         '''
         returns the number of features in the map
         '''
-        return (self.x_B_1.size-3)/2
+        return (self.xk.size-3)/2
     
     #========================================================================
     def get_polar_line(self, line, odom):
@@ -94,7 +94,7 @@ class EKF_SLAM(object):
         position
         '''
         #TODO: Program this function
-        # - Update self.x_B_1 and self.P_B_1 using uk and self.Qk
+        # - Update self.xk and self.Pk using uk and self.Qk
              
         # Compound robot with odometry
         

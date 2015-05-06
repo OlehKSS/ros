@@ -8,7 +8,7 @@ import rospy
 import tf
 
 # ROS messages
-from geometry_msgs.msg import Point, PoseArray, PoseStamped
+#from geometry_msgs.msg import Point, PoseArray, PoseStamped
 from visualization_msgs.msg import Marker
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
@@ -17,10 +17,10 @@ from nav_msgs.msg import Odometry
 import numpy as np
 
 # Transforms
-from tf.transformations import euler_from_quaternion
+#from tf.transformations import quaternion euler_from_quaternion
 
 # Custom message
-from probabilistic_basics.msg import IncrementalOdometry2D
+#from probabilistic_basics.msg import IncrementalOdometry2D
 
 # Custom libraries
 from probabilistic_lib.functions import publish_lines, get_map, get_ekf_msgs, yaw_from_quaternion, angle_wrap, comp
@@ -34,7 +34,8 @@ class LocalizationNode(object):
     
     #===========================================================================
     def __init__(self, x0=0,y0=0,theta0=0, odom_lin_sigma=0.025, odom_ang_sigma=np.deg2rad(2),
-                        meas_rng_noise=0.2,  meas_ang_noise=np.deg2rad(10),xs = 0, ys = 0, thetas = 0):
+                        meas_rng_noise=0.2,  meas_ang_noise=np.deg2rad(10),xs = 0, ys = 0, thetas = 0,
+                       rob2sensor = [-0.087, 0.013, np.deg2rad(0)]):
         '''
         Initializes publishers, subscribers and the particle filter.
         '''
@@ -43,13 +44,17 @@ class LocalizationNode(object):
         self.robotToSensor = np.array([xs,ys,thetas])        
         
         # Publishers
-        self.pub_lines = rospy.Publisher("lines", Marker)
+        self.pub_lines = rospy.Publisher("ekf_lines", Marker)
+        self.pub_map = rospy.Publisher("map", Marker)
+        self.pub_map_gt = rospy.Publisher("map_gt", Marker)
         self.pub_odom = rospy.Publisher("predicted_odom", Odometry)
         self.pub_uncertainity = rospy.Publisher("uncertainity",  Marker)
+        self.pub_laser = rospy.Publisher("ekf_laser",  LaserScan)
         
         # Subscribers
         self.sub_scan = rospy.Subscriber("scan", LaserScan, self.laser_callback)
         self.sub_odom = rospy.Subscriber("odom", Odometry, self.odom_callback)
+        self.sub_scan = rospy.Subscriber("lines", Marker, self.lines_callback)
         
         # TF
         self.tfBroad = tf.TransformBroadcaster()
@@ -72,6 +77,9 @@ class LocalizationNode(object):
         
         # Particle filter
         self.ekf = EKF_SLAM(x0, y0, theta0, odom_lin_sigma, odom_ang_sigma, meas_rng_noise, meas_ang_noise)
+        
+        # Transformation from robot to sensor
+        self.robot2sensor = np.array(rob2sensor)
                 
             
     #===========================================================================
@@ -92,22 +100,25 @@ class LocalizationNode(object):
                msg.pose.pose.orientation.y,
                msg.pose.pose.orientation.z,
                msg.pose.pose.orientation.w)
-        
+               
         # Publish transform
-        self.tfBroad.sendTransform(translation = (self.robotToSensor[0],self.robotToSensor[1],0),
-                                   rotation = tf.transformations.quaternion_from_euler(0,0,self.robotToSensor[2]),
+        self.tfBroad.sendTransform(translation = self.robot2sensor,
+                                   rotation = (0, 0, 0, 1), 
                                    time = msg.header.stamp,
-                                   child = '/openni_depth_frame',
+                                   child = '/sensor',
                                    parent = '/robot')
-        
+        self.tfBroad.sendTransform(translation = self.robot2sensor,
+                                   rotation = (0, 0, 0, 1), 
+                                   time = msg.header.stamp,
+                                   child = '/camera_depth_frame',
+                                   parent = '/base_footprint')
         self.tfBroad.sendTransform(translation = trans,
                                    rotation = rot, 
                                    time = msg.header.stamp,
-                                   child = '/robot_original',
+                                   child = '/base_footprint',
                                    parent = '/odom')
-        self.tfBroad.sendTransform(translation = (self.x0[0]-0.1908,self.x0[1]+0.08481,self.x0[2]),
-                                   rotation = tf.transformations.quaternion_from_euler(0,0,-0.034128),
-#                                   rotation = (0,0,0,1), 
+        self.tfBroad.sendTransform(translation = (self.x0[0]-0.1908,self.x0[1]+0.08481,0),
+                                   rotation = tf.transformations.quaternion_from_euler(0,0,self.x0[2]-0.034128), 
                                    time = msg.header.stamp,
                                    child = '/odom',
                                    parent = '/world')
@@ -138,43 +149,46 @@ class LocalizationNode(object):
     #===========================================================================
     def laser_callback(self, msg):
         '''
+        Republishes laser scan in the EKF solution frame.
+        '''
+        msg.header.frame_id = '/sensor'
+        self.pub_laser.publish(msg)
+    
+    #===========================================================================
+    def lines_callback(self, msg):
+        '''
         Function called each time a LaserScan message with topic "scan" arrives. 
         '''
         # Save time
-        self.time = msg.header.stamp
-        
-        # Project LaserScan to points in space
-        rng = np.array(msg.ranges)
-        ang = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
-        points = np.vstack((rng * np.cos(ang),
-                            rng * np.sin(ang)))
-                            
-        # Filter long ranges
-        points = points[:, rng < msg.range_max]
-        
-        # Use split and merge to obtain lines and publish
-        self.lines = splitandmerge(points, split_thres=0.1,
-                                      inter_thres=0.3,
-                                      min_points=6,
-                                      dist_thres=0.12,
-                                      ang_thres=np.deg2rad(10))
+        self.linestime = msg.header.stamp
 
-        # Have valid points
-        if self.lines is not None and not self.new_laser:            
-            # Transform line to robot frame
-            for i in range(0,self.lines.shape[0]):
-                point1S = np.append(self.lines[i,0:2], 0)
-                point2S = np.append(self.lines[i,2:4], 0)
-                point1R = comp(self.robotToSensor, point1S)
-                point2R = comp(self.robotToSensor, point2S)
-                self.lines[i,:] = np.append(point1R[0:2],point2R[0:2])
+        # Get the lines
+        if len(msg.points) > 0:
             
-            # Publish results
-            publish_lines(self.lines, self.pub_lines, frame='/robot',
-                      time=msg.header.stamp, ns='scan_lines_robot', color=(0,0,1))
+            # Structure for the lines
+            self.lines = np.zeros((len(msg.points) / 2, 4))
+                  
+            for i in range(0, len(msg.points)/2):
+                # Get start and end points
+                pt1 = msg.points[2*i]
+                pt2 = msg.points[2*i+1]
+                
+                # Transform to robot frame
+                pt1R = comp(self.robot2sensor, [pt1.x, pt1.y, 0.0])
+                pt2R = comp(self.robot2sensor, [pt2.x, pt2.y, 0.0])
+                
+                # Append to line list
+                self.lines[i, :2] = pt1R[:2]
+                self.lines[i, 2:] = pt2R[:2]
             
             # Flag
             self.new_laser = True
+            
+            # Publish
+            publish_lines(self.lines, self.pub_lines,
+                          frame = '/robot',
+                          time = msg.header.stamp,
+                          ns = 'lines_robot', color = (0,0,1))
     
     #===========================================================================
     def iterate(self):
@@ -208,15 +222,15 @@ class LocalizationNode(object):
         Publishes all results from the filter.
         '''
         # Ground turth of the map of the room
-        publish_lines(self.map, self.pub_lines, frame='/world', ns='gt_map', color=(0.3,0.3,0.3))
+        publish_lines(self.map, self.pub_map_gt, frame='/world', ns='gt_map', color=(0.3,0.3,0.3))
         
-        msg_odom, msg_ellipse, trans, rot, room_map = get_ekf_msgs(self.ekf)
+        odom, ellipse, trans, rot, room_map = get_ekf_msgs(self.ekf)
         
-        publish_lines(room_map, self.pub_lines, frame='/world', ns='map', color=(0,1,0))
+        publish_lines(room_map, self.pub_map, frame='/world', ns='map', color=(0,1,0))
         
 
-        self.pub_odom.publish(msg_odom)
-        self.pub_uncertainity.publish(msg_ellipse)
+        self.pub_odom.publish(odom)
+        self.pub_uncertainity.publish(ellipse)
         self.tfBroad.sendTransform(translation = trans,
                                    rotation = rot, 
                                    time = self.time,

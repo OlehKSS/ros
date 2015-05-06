@@ -17,6 +17,9 @@
         <arg name="dataset2" default="false"/>
      </include>
     
+    <!-- Split & Merge node -->
+    <include file="$(find lab2_splitandmerge)/launch/splitandmerge.launch"/>
+
     <!-- RViz -->
     <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find lab5_slam)/config/custom.rviz" output="screen"/>
     
