@@ -2,17 +2,20 @@
 
     <!-- Arguments -->
     <arg name="rviz" default="true"/>
-    <arg name="f" default="1.0"/>
+    <arg name="bagfile" default="true"/>
+    <arg name="frequency" default="1.0"/>
+    <arg name="pause" default="false"/>
+    <arg name="simulator" default="false"/>
 
     <!-- Source data -->
     <include file="$(find probabilistic_basics)/launch/basics.launch">
         <!-- Rosbag arguments -->
-        <arg name="frequency" default="$(arg f)"/>
-        <arg name="pause"     default="false"/>
+        <arg name="frequency" default="$(arg frequency)"/>
+        <arg name="pause"     default="$(arg pause)"/>
       
         <!-- Source (only one true or none for real robot) -->
-        <arg name="bagfile"   default="true"/>
-        <arg name="simulator" default="false"/>
+        <arg name="bagfile"   default="$(arg bagfile)"/>
+        <arg name="simulator" default="$(arg simulator)"/>
     
         <!-- Bagfile (only used if bagfile true) -->
         <arg name="dataset2" default="false"/>

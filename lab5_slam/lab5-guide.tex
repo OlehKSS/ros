@@ -52,10 +52,11 @@ This EKF-SLAM is based in two different sensors. The first one are the encoders 
 \begin{itemize}
 	\item Read and understand the guide for this Lab and look into the course slides for the feature-based EKF-SLAM.
 	\item Find the expression of $F_k$ and $G_k$ for the prediction equation as functions of the jacobian of the composition with respect to the state vector $J_{1\oplus}$ and the odometry readings $J_{2\oplus}$.
-	\item Given a feature in the robot frame $z_k$ with uncertainty $R_k$. Find the equation to increment the state vector with this feature. Please, look at the function \texttt{self.tfPolarLine(tf,feature)} where the conversion of a feature between frames related by \texttt{tf} is programmed and differenciate it in order to get the equation for adding features. Is it possible to do the state augmentation with just one equation for $n$ features? How would the matrices involved in the equations be (matrice size)?
-	\item Find the size of the matrices $H$, $S$, $v$ and $R$ in order to be able to update the filter with $n$ features observations without using a for loop.
+	\item Is it possible to do the state augmentation with just one equation for $n$ new features? Justify your answer with equations and shapes of matrices.
+	\item Consider $f(^Ax_B,^Bz)$ (implemented in \texttt{self.tfPolarLine}) the function that converts an observed feature $^Bz$ in the frame $B$ into $A$ using the transformation $^Ax_B$ (how the frame $B$ is seen from  $A$), $F_{1|x,z}=\delta f(^Ax_B,^Bz) / \delta {^Ax_B}$ and $F_{2|x,z}=\delta f(^Ax_B,^Bz) / \delta{^Bz}$. Show the equations to add $n$ feature to the sate vector. Where are the partial derivatives of $f$ going to be located (write them within the equations)? 
+	\item considering that we have $n$ features in the state vector, find the size of the matrices $H$, $S$, $v$ and $R$ in order to be able to update the filter with $m$ associated features.
 \end{itemize}
-Submit a short pdf with the equations asked in this section.
+Submit a short, non hand-written pdf with the equations asked in this section.
 
 \section{Lab work}
 For this lab work it is possible to use code previously done in the Lab4 - EKF Map Based Localization.
