@@ -205,8 +205,8 @@ class LocalizationNode(object):
         # Weightimg and resampling
         if self.new_laser:
             
-            Innovk_List, H_k_List, S_f_List, Rk_List,idx_not_associated = self.ekf.data_association(self.lines.copy())
-            self.ekf.update_position(Innovk_List, H_k_List, S_f_List, Rk_List)
+            Innovk_List, H_k_List, Rk_List,idx_not_associated = self.ekf.data_association(self.lines.copy())
+            self.ekf.update_position(Innovk_List, H_k_List, Rk_List)
             self.ekf.state_augmentation(self.lines.copy(),idx_not_associated)
             self.new_laser = False
             self.pub = True

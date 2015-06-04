@@ -31,7 +31,7 @@ class EKF_SLAM(object):
         self.odom_ang_sigma = odom_ang_sigma
         self.meas_rng_noise = meas_rng_noise
         self.meas_ang_noise = meas_ang_noise
-        self.chi_thres = 0 # TODO chose your own value
+        self.chi_thres = 0.103 # TODO chose your own value
        
         # Odometry uncertainty 
         self.Qk = np.array([[ self.odom_lin_sigma**2, 0, 0],\
@@ -50,7 +50,7 @@ class EKF_SLAM(object):
         # Initialize buffer for forcing observing n times a feature before 
         # adding it to the map
         self.featureObservedN = np.array([])
-        self.min_observations = 0
+        self.min_observations = 5
     
     #========================================================================
     def get_number_of_features_in_map(self):
@@ -88,10 +88,9 @@ class EKF_SLAM(object):
         
     #========================================================================
     def predict(self, uk):
+        
         '''
-        Predicts the position of the robot according to the previous position
-        and the odometry measurements. It also updates the uncertainty of the
-        position
+        Predicts the position of the robot according to the previous position and the odometry measurements. It also updates the uncertainty of the position
         '''
         #TODO: Program this function
         # - Update self.xk and self.Pk using uk and self.Qk
@@ -111,12 +110,7 @@ class EKF_SLAM(object):
         
     def data_association(self, lines):
         '''
-        Implements ICNN for each feature of the scan.
-        Innovk_List -> matrix containing the innovation for each associated 
-                       feature
-        H_k_List -> matrix of the jacobians.
-        S_f_List -> matrix of the different S_f for each feature associated
-        Rk_List -> matrix of the noise of each measurement
+        Implements ICCN for each feature of the scan.
         '''
     
         #TODO: Program this function
@@ -129,14 +123,13 @@ class EKF_SLAM(object):
         # Init variable
         Innovk_List   = np.zeros((0,0))
         H_k_List      = np.zeros((0,0))
-        S_f_List      = np.zeros((0,0))
         Rk_List       = np.zeros((0,0))
         idx_not_associated = np.array(range(lines.shape[0]))
                 
-        return Innovk_List, H_k_List, S_f_List, Rk_List, idx_not_associated
+        return Innovk_List, H_k_List, Rk_List, idx_not_associated
         
     #========================================================================
-    def update_position(self, Innovk_List, H_k_List, S_f_List , Rk_List) :
+    def update_position(self, Innovk_List, H_k_List, Rk_List) :
         '''
         Updates the position of the robot according to the given the position
         and the data association parameters.
@@ -233,4 +226,4 @@ class EKF_SLAM(object):
         # Calculate mahalanobis distance
         D = []
         
-        return D,v,h,H,S
+        return D,v,h,H

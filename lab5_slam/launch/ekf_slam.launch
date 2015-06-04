@@ -2,11 +2,12 @@
 
     <!-- Arguments -->
     <arg name="rviz" default="true"/>
+    <arg name="f" default="1.0"/>
 
     <!-- Source data -->
     <include file="$(find probabilistic_basics)/launch/basics.launch">
         <!-- Rosbag arguments -->
-        <arg name="frequency" default="1.0"/>
+        <arg name="frequency" default="$(arg f)"/>
         <arg name="pause"     default="false"/>
       
         <!-- Source (only one true or none for real robot) -->
