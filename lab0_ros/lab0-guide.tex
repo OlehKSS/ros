@@ -49,7 +49,7 @@ The goal of this lab session is to get started with ROS that will be used used i
 Currently the only official supported platform for ROS is Ubuntu. Ubuntu is a computer OS (Operating System) based on Debian Linux. As the computers in the Robotics Lab doesn't have Ubuntu installed, the firsts steps you need to do is install Ubuntu and ROS in your machines. In order to install Ubuntu you can either:
 
 \begin{enumerate}
-    \item (prefered) Install Ubuntu in a partition alongside your other OS (hard disk install). Make sure that you install the distributions specified below:
+    \item (Recomended) Install Ubuntu in a partition alongside your other OS (hard disk install). Make sure that you install the distributions specified below:
     \begin{itemize}
         \item Ubuntu 12.04.5 LTS (\href{http://releases.ubuntu.com/12.04/ubuntu-12.04.5-desktop-amd64.iso}{download iso}).
         \item ROS Hydro Desktop Full install (\href{http://wiki.ros.org/hydro/Installation/Ubuntu}{install instructions}).
@@ -57,6 +57,8 @@ Currently the only official supported platform for ROS is Ubuntu. Ubuntu is a co
     
     \item (not recommended) Install Ubuntu in a virtual machine inside your normal OS. In this case you can donwload a \href{https://www.virtualbox.org/wiki/Linux_Downloads}{Virtualbox}  and follow the same installation instruction than the previous point, but this time on the virtual machine. Note that this kind of installation can lead to problems with graphics drivers in some or all labs.
 \end{enumerate}
+
+*The computers in the laboratory have a virtual machine that will allow you to go through the lab exercises.
 
 \section{Lab: ROS tutorials}
 Now that we have Ubuntu and ROS successfully installed, please follow the most fundamental ROS tutorials. Please have in mind that your ROS workspace, the place where you need to put all your packages is the catkin{\textunderscore}ws folder inside the home directory.
@@ -115,7 +117,7 @@ And using the ROS tools you’ve seen in the tutorials (rostopic, rosmsg, rqt{\t
 \end{enumerate}
 
 \noindent
-Clone the repository of the Probabilistic labs in your workspace. This repository contains all the code for this labs. After download compile the code:
+Clone the repository of the Probabilistic labs in your workspace. This repository contains all the code for this labs. After download compile the code (if you are using a desktop machine from the lab skip this step and go to the next one to update the repository):
 \begin{verbatim}
     cd ~/catkin_ws/src
     git clone https://bitbucket.org/gvallicrosa/probabilistic_labs.git
