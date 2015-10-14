@@ -75,6 +75,7 @@ Most of the work asked here is based on the Turtlebot tutorials from \url{http:/
 \subsection{Network configuration}
 In ROS, two main variables have to be set up before start working: the \texttt{ROS\_MASTER\_URI}, which tells the system which robot/computer will host the roscore, and the \texttt{ROS\_HOSTNAME}, which hosts the pc's IP or name. Pay special attention to this two variables if the messages are not properly sent or received over the network. If this happends that normally means that ether the configuration is wrong or that the name in either of one variable can not be resolved to an IP address.
 
+\subsubsection{Working with your own computer}
 In order to set up the network, connect to the appropriate wifi according to the robot (see table \ref{tab:ips}). Then, configure your network according to the IPs from table \ref{tab:ips}. For the configuration, three steps are done. First add the Turtlebot to the hosts file in \textit{/etc/hosts}: 
 \begin{shaded}
 	\begin{itemize}
@@ -92,7 +93,7 @@ Use the TURTLEBOT\_IP and ROBOT\_NAME from the following table:
 		turtlebot2 & turtlebot2 & turtlebot2 & 10.42.0.1 \\ \hline
 		turtlebot3 & WLAN\_24 & C001D201E7A24 & 192.168.1.3 \\ \hline
 		turtlebot4 & WLAN\_24 & C001D201E7A24 & 192.168.1.4 \\ \hline
-		turtlebot5 & turtlebot5 & turtlebot5 & 10.42.0.1 \\ \hline
+		turtlebot5 & WLAN\_24 & C001D201E7A24 & 192.168.1.5 \\ \hline
 	\end{tabular}
     \caption{Network configuration for Turtlebots. }
     \label{tab:ips}
@@ -123,6 +124,29 @@ To check if the connection is properly done, first we open an ssh connection to 
 	\end{itemize}
 \end{shaded}
 and there, we run a roscore. Then run in your pc's terminal:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] rostopic list
+	\end{itemize}
+\end{shaded}
+This command should return a list of topics if a the ROS master has a core running.
+
+\subsubsection{Working with the computers from the laboratory}
+To connect to the robots from the computers in the laboratory you have to connect your windows machine to the appropriate WiFi network \ref{tab:ips}. Switch on the virtual machine and connect the first network (Intel 82540EM Gigabit Ehternet Controller) to the appropriate turtlebot network and the second network interface (Red Hat Virtio network device) to internet_acess to be able to surf the web.
+
+To check if the connection is properly done, first we open an ssh connection to the robot:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] ssh ROBOT\_NAME
+	\end{itemize}
+\end{shaded}
+where ROBOT\_NAME is \textttt{turtlebot#} (example: turtlebot1). There, we run a roscore. To set up the desktop terminal to work with that specific turtlebot type:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] turtlebot#
+	\end{itemize}
+\end{shaded}
+where # is the number of the turtlebot you are going to use. This will change your \texttt{ROS\_MASTER\_URI} to the specified robot. Finally on the desktop run:
 \begin{shaded}
 	\begin{itemize}
 		\item[\$] rostopic list
@@ -205,18 +229,18 @@ The last tutorial is a funny function for Turtlebot: the follower package. Run (
 Now stand in front of the robot and move, it should follow you if you are not moving fast.
 
 \subsection{Turtlebot driver}
-Along with the lab documentation you can find a ROS package called \texttt{turtlebot\_driver}. Copy it to your ROS hydro workspace (the one you set up on the last lab session). This package contains the script where the lab programming will be done. Please modify the driver.py (\texttt{turtlebot\_driver/src/driver.py}) in order to be able to make the Turtlebot go to a given position. For this purpose, please modify the constructor of the driver class where the definition of the subscriber, publisher and velocity message are missing. You will have to modify also the functions \texttt{read\_position}, which stores the position received on a message to the class variables, and \texttt{compute\_velocity} where the velocity message is created.
+Along with the lab documentation you can find a ROS package called \texttt{lab1\_turtlebot}. This package contains the script where the lab programming will be done. Please modify the driver.py (\texttt{lab1\_turtlebot/src/driver.py}) in order to be able to make the Turtlebot go to a given position. For this purpose, please modify the constructor of the driver class where the definition of the subscriber, publisher and velocity message are missing. You will have to modify also the functions \texttt{read\_position}, which stores the position received on a message to the class variables, and \texttt{compute\_velocity} where the velocity message is created.
 
 To launch the node run:
 \begin{shaded}
 	\begin{itemize}
-		\item[\$] roslaunch turtlebot\_driver driver.launch
+		\item[\$] roslaunch lab1\_turtlebot driver.launch
 	\end{itemize}
 \end{shaded}
 If no arguments are given to the \texttt{driver.lanch}, the goal point is $(0,0,0)$ for $(x,y,\theta)$. If you want this points to change use:
 \begin{shaded}
 	\begin{itemize}
-		\item[\$] roslaunch turtlebot\_driver driver.launch x:=$x$ y:=$y$ theta:=$\theta$
+		\item[\$] roslaunch lab1\_turtlebot driver.launch x:=$x$ y:=$y$ theta:=$\theta$
 	\end{itemize}
 \end{shaded}
 Furthermore, it is possible to launch this node in a virtual environment. For this purpose first you have to set up your masters to your workstation to avoid problems with the real robot:
@@ -225,7 +249,7 @@ Furthermore, it is possible to launch this node in a virtual environment. For th
 		\item[\$] export ROS\_MASTER\_URI=http://localhost:11311
 	\end{itemize}
 \end{shaded}
-now, the terminal where you have run this command uses your workstation as ROS master. To launch the simulator run:
+(the laboratory desktops have a short cut by typing \texttt{local} in the terminal you want it to have itself as \texttt{ROS\_MASTER\_URI}) now, the terminal where you have run this command uses your workstation as ROS master. To launch the simulator run:
 \begin{shaded}
 	\begin{itemize}
 		\item[\$] roslaunch turtlebot\_driver driver.launch sim:=true
