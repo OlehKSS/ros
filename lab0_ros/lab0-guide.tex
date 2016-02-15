@@ -42,26 +42,26 @@
 
 \section{The goal}
 
-The goal of this lab session is to get started with ROS that will be used used in all the lab sessions of Probabilistic Robotics. The Robot Operating System (ROS) is a software framework for robot software development. ROS provides libraries and tools to help software developers create robot applications. It provides hardware abstraction, device drivers, libraries, visualizers, message-passing, package management, and more. ROS will be used in the next lab exercises, so it is fundamental to understand all the basics given in this session. 
+The goal of this lab session is to get started with the software tools that will be used used during the lab sessions of Probabilistic Robotics, especially ROS. The Robot Operating System (ROS) is a software framework for robot software development. ROS provides libraries and tools to help software developers creating robot applications. It provides hardware abstraction, device drivers, libraries, visualizers, message-passing, package management and more. ROS will be used in the next lab exercises, and so, it is fundamental to understand all the basics given in this session. 
 
 \section{Pre-lab: Installing Ubuntu and ROS}
 
-Currently the only official supported platform for ROS is Ubuntu. Ubuntu is a computer OS (Operating System) based on Debian Linux. As the computers in the Robotics Lab doesn't have Ubuntu installed, the firsts steps you need to do is install Ubuntu and ROS in your machines. In order to install Ubuntu you can either:
+Currently the only officially supported platform for ROS is Ubuntu. Ubuntu is a computer OS (Operating System) based on Debian Linux. The computers in the Robotics Lab have a Ubuntu distribution installed in a virtual machine, but is highly recommended to have Ubuntu installed in your own machines, so you are able to work when you don't have access to the lab.
+
+In order to install Ubuntu you can either:
 
 \begin{enumerate}
     \item (Recomended) Install Ubuntu in a partition alongside your other OS (hard disk install). Make sure that you install the distributions specified below:
     \begin{itemize}
-        \item Ubuntu 12.04.5 LTS (\href{http://releases.ubuntu.com/12.04/ubuntu-12.04.5-desktop-amd64.iso}{download iso}).
-        \item ROS Hydro Desktop Full install (\href{http://wiki.ros.org/hydro/Installation/Ubuntu}{install instructions}).
+        \item Ubuntu 14.04 LTS (\href{http://releases.ubuntu.com/14.04/ubuntu-14.04.3-desktop-amd64.iso}{download iso}).
+        \item ROS Indigo Desktop Full install (\href{http://wiki.ros.org/hydro/Installation/Ubuntu}{install instructions}).
     \end{itemize}
     
     \item (not recommended) Install Ubuntu in a virtual machine inside your normal OS. In this case you can donwload a \href{https://www.virtualbox.org/wiki/Linux_Downloads}{Virtualbox}  and follow the same installation instruction than the previous point, but this time on the virtual machine. Note that this kind of installation can lead to problems with graphics drivers in some or all labs.
 \end{enumerate}
 
-*The computers in the laboratory have a virtual machine that will allow you to go through the lab exercises.
-
 \section{Lab: ROS tutorials}
-Now that we have Ubuntu and ROS successfully installed, please follow the most fundamental ROS tutorials. Please have in mind that your ROS workspace, the place where you need to put all your packages is the catkin{\textunderscore}ws folder inside the home directory.
+Now that you have Ubuntu and ROS successfully installed, please follow the most fundamental ROS tutorials. Please have in mind that your ROS workspace, the place where you need to put all your packages is the catkin{\textunderscore}ws folder inside the home directory.
 
 \begin{itemize}
     \item Creating a workspace for catkin.\\
