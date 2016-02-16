@@ -3,7 +3,7 @@
 
 from math import *
 import numpy as np
-from probabilistic_lib.functions import angle_wrap, comp, compInv
+from probabilistic_lib.functions import angle_wrap, comp, state_inv, state_inv_jacobian
 import scipy.linalg
 import rospy
 
