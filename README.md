@@ -24,4 +24,17 @@ catkin_make
 * Lab 2: Split & Merge algorithm for line extraction
 * Lab 3: Particle Filter
 * Lab 4: Extended Kalman Filter (EKF)
-* Lab 5: Simultaneous Localization and Mapping (SLAM) 
+* Lab 5: Simultaneous Localization and Mapping (SLAM)
+
+
+### Building the documentation ###
+
+For the documentation of `probabilistic_basics` functions, do the following:
+
+~~~~
+sudo apt-get install python-sphinx ros-$ROS_DISTRO-rosdoc-lite
+roscd probabilistic_basics
+rosdoc_lite .
+~~~~
+
+The documentation lies on `doc/html/index.html`
