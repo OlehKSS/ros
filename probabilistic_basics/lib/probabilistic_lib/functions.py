@@ -134,6 +134,60 @@ def get_map(x=0, y=0, a=0):
 
 
 ########################################################################
+def get_dataset3_map(x=0, y=0, a=0):
+    """
+    Retrieve the map for dataset3 with offsets [x y a] if necessary.
+
+    Lines defined as [x1 y1 x2 y2].
+
+    For the EKF lab use: x = 0.7841748 y = 0.313926 a = -0.03
+
+    This is the map for dataset1.bag
+
+    :param float x: initial x position of the robot in the map.
+    :param float y: initial y position of the robot in the map.
+    :param float a: initial orientation of the robot in the map.
+    :returns: the lines defined by rows [x1, y1, x2, y2].
+    :rtype: :py:obj:`numpy.ndarray`
+    """
+    lines = np.array([[0, 0, 0, 64],
+                      [0, 64, 13, 64],
+                      [13, 64, 13, 78],
+                      [13, 78, 79, 78],
+                      [79, 78, 79, 44],
+                      [79, 44, 71, 44],
+                      [71, 44, 71, 18],
+                      [71, 18, 79, 18],
+                      [79, 18, 79, 0],
+                      [79, 0, 0, 0],
+
+                      [15, 13, 15, 33],
+                      [15, 33, 24, 33],
+                      [24, 33, 24, 22],
+                      [24, 22, 33, 22],
+                      [33, 22, 33, 13],
+                      [33, 13, 15, 13],
+
+                      [37, 45, 37, 68],
+                      [37, 68, 65, 68],
+                      [65, 68, 65, 58],
+                      [65, 58, 53, 58],
+                      [53, 58, 53, 45],
+                      [53, 45, 37, 45]]).T
+    lines[1, :] = -lines[1, :]
+    lines[3, :] = -lines[3, :]
+    dis = -4.0 + 0.05
+    lines = lines * 0.1 + np.array([[dis, -dis, dis, -dis]]).T
+    # Transform to specified frame
+    lines -= np.array([[x, y, x, y]]).T
+    rot = np.array([[np.cos(a), -np.sin(a)],
+                    [np.sin(a), np.cos(a)]])
+    rotate = np.vstack((np.hstack((rot, np.zeros((2, 2)))),
+                        np.hstack((np.zeros((2, 2)), rot))))
+    return np.dot(rotate, lines).T
+
+
+########################################################################
 def angle_wrap(ang):
     """
     Return the angle normalized between [-pi, pi].
@@ -384,7 +438,7 @@ def get_ekf_msgs(ekf):
 
     # Uncertainity
     uncert = ekf.Pk[:2, :2].copy()
-    val, vec = np.linalg.eig(uncert)
+    val, vec = np.linalg.eigh(uncert)
     yaw = np.arctan2(vec[1, 0], vec[0, 0])
     quat = quaternion_from_yaw(yaw)
     msg_ellipse = Marker()
@@ -393,15 +447,15 @@ def get_ekf_msgs(ekf):
     msg_ellipse.type = Marker.CYLINDER
     msg_ellipse.pose.position.x = ekf.xk[0]
     msg_ellipse.pose.position.y = ekf.xk[1]
-    msg_ellipse.pose.position.z = -0.05  # below others
+    msg_ellipse.pose.position.z = -0.1  # below others
     msg_ellipse.pose.orientation.x = quat[0]
     msg_ellipse.pose.orientation.y = quat[1]
     msg_ellipse.pose.orientation.z = quat[2]
     msg_ellipse.pose.orientation.w = quat[3]
-    msg_ellipse.scale.x = 2.45 * math.sqrt(val[0])
-    msg_ellipse.scale.y = 2.45 * math.sqrt(val[1])
-    msg_ellipse.scale.z = 0.02
-    msg_ellipse.color.a = 1.0
+    msg_ellipse.scale.x = 2 * math.sqrt(val[0])
+    msg_ellipse.scale.y = 2 * math.sqrt(val[1])
+    msg_ellipse.scale.z = 0.05
+    msg_ellipse.color.a = 0.6
     msg_ellipse.color.r = 0.0
     msg_ellipse.color.g = 0.7
     msg_ellipse.color.b = 0.7

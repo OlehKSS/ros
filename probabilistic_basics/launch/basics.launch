@@ -3,15 +3,18 @@
     <!-- Rosbag arguments -->
     <arg name="frequency" default="1.0"/>
     <arg name="pause"     default="false"/>
-    
+
     <!-- Source (only one true or none for real robot) -->
     <arg name="bagfile"   default="true"/>
     <arg name="simulator" default="false"/>
 
     <!-- Bagfile (only used if bagfile true) -->
-    <arg name="dataset2" default="true"/>
+    <arg name="dataset1" default="false"/>
+    <arg name="dataset2" default="false"/>
+    <arg name="dataset3" default="false"/>
+    <arg if="$(arg dataset1)" name="bfName" default="$(find probabilistic_basics)/bags/dataset1.bag"/>
     <arg if="$(arg dataset2)" name="bfName" default="$(find probabilistic_basics)/bags/dataset2.bag"/>
-    <arg unless="$(arg dataset2)" name="bfName" default="$(find probabilistic_basics)/bags/dataset1.bag"/>
+    <arg if="$(arg dataset3)" name="bfName" default="$(find probabilistic_basics)/bags/dataset3.bag"/>
 
     <!-- Bagfile -->
     <group if="$(arg bagfile)">
@@ -39,5 +42,5 @@
             <include file="$(find probabilistic_basics)/launch/gazebo.launch"/>
         </group>
     </group>
-    
+
 </launch>
