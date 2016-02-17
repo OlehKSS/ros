@@ -27,7 +27,7 @@ class EKF(object):
           meas_ang_noise: measurement angular noise
         """
         # Map with initial displacement
-        self.map = funcs.get_map(xinit[0], xinit[1], xinit[2])
+        self.map = funcs.get_dataset3_map(xinit[0], xinit[1], xinit[2])
 
         # Prediction noise
         self.Qk = np.array([[odom_lin_sigma**2, 0, 0],
@@ -96,7 +96,7 @@ class EKF(object):
         for i in range(0, lines.shape[0]):
 
             # Get the polar line representation in robot frame
-            # z = get_polar_line(...)
+            # z = funcs.get_polar_line(...)
 
             # Variables for finding minimum
             minD = 1e9
@@ -106,7 +106,7 @@ class EKF(object):
             for j in range(0, self.map.shape[0]):
 
                 # Compute matrices
-                # h = get_polar_line(...)
+                # h = funcs.get_polar_line(...)
                 # H = self.jacobianH(...)
                 # v =
                 # S =

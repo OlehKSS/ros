@@ -224,12 +224,12 @@ if __name__ == '__main__':
 
     # ROS initializzation
     rospy.init_node('localization')
-    node = LocalizationNode(xinit=[0.8, 0.3, -0.03],
+    node = LocalizationNode(xinit=[0.0, 0.0, 0.0],
                             odom_lin_sigma=0.025,
                             odom_ang_sigma=np.deg2rad(2),
                             meas_rng_noise=0.2,
                             meas_ang_noise=np.deg2rad(10),
-                            rob2sensor=[-0.087, 0.013, np.deg2rad(0)])
+                            rob2sensor=[0.0, 0.0, np.deg2rad(0)])
     # Filter at 10 Hz
     r = rospy.Rate(10)
     while not rospy.is_shutdown():
