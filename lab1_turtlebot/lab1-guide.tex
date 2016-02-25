@@ -59,7 +59,7 @@ This lab is designed to do a first approach to the Turtlebot 2 \ref{fig:turtlebo
 
 \section{Pre-lab}
 
-Upgrade to hydro your ROS distribution (if you are not using it already) following the instructions from \url{http://wiki.ros.org/hydro/Installation/Ubuntu}. We recommend to install the \texttt{ros-hydro-desktop-full} package. Furthermore, you need to install all the required Turtlebot packages by using \texttt{sudo apt-get install ros-hydro-turtlebot*}. It is also recommended to install chrony \texttt{sudo apt-get install chrony} and synchronize the computer \texttt{sudo ntpdate ntp.ubuntu.com}.
+Upgrade to hydro your ROS distribution (if you are not using it already, if you have newer versions the turtlebot packages are not available) following the instructions from \url{http://wiki.ros.org/hydro/Installation/Ubuntu}. We recommend to install the \texttt{ros-hydro-desktop-full} package. Furthermore, you need to install all the required Turtlebot packages by using \texttt{sudo apt-get install ros-hydro-turtlebot*} (only for hydro distribution). It is also recommended to install chrony \texttt{sudo apt-get install chrony} and synchronize the computer \texttt{sudo ntpdate ntp.ubuntu.com}. If your ROS distribution is Jade, you can do the pre-lab in the laboratory at the beginning using the virtual machines available.
 
 After installing the hydro version and all the Turtlebot 2 packages follow this instructions:
 \begin{itemize}
@@ -73,7 +73,7 @@ After installing the hydro version and all the Turtlebot 2 packages follow this 
 Most of the work asked here is based on the Turtlebot tutorials from \url{http://wiki.ros.org/Robots/TurtleBot}. For the robots use \textit{turtlebot} as user name and \textit{ros} as password.
 
 \subsection{Network configuration}
-In ROS, two main variables have to be set up before start working: the \texttt{ROS\_MASTER\_URI}, which tells the system which robot/computer will host the roscore, and the \texttt{ROS\_HOSTNAME}, which hosts the pc's IP or name. Pay special attention to this two variables if the messages are not properly sent or received over the network. If this happends that normally means that ether the configuration is wrong or that the name in either of one variable can not be resolved to an IP address.
+In ROS, two main variables have to be set up before start working: the \texttt{ROS\_MASTER\_URI}, which tells the system which robot/computer will host the roscore, and the \texttt{ROS\_HOSTNAME}, which hosts the pc's IP or name. Pay special attention to this two variables if the messages are not properly sent or received over the network. If this happens, it means that the network configuration is wrong and some of the variables can not be resolved to an IP address.
 
 \subsubsection{Working with your own computer}
 In order to set up the network, connect to the appropriate wifi according to the robot (see table \ref{tab:ips}). Then, configure your network according to the IPs from table \ref{tab:ips}. For the configuration, three steps are done. First add the Turtlebot to the hosts file in \textit{/etc/hosts}: 
@@ -129,10 +129,10 @@ and there, we run a roscore. Then run in your pc's terminal:
 		\item[\$] rostopic list
 	\end{itemize}
 \end{shaded}
-This command should return a list of topics if a the ROS master has a core running.
+This command should return a list of topics if a the ROS master has a core running. If the ROS core is running in the master, and the \texttt{rostopic list} does not connects to it, the network configuration is not well done.
 
 \subsubsection{Working with the computers from the laboratory}
-To connect to the robots from the computers in the laboratory you have to connect your windows machine to the appropriate WiFi network \ref{tab:ips}. Switch on the virtual machine and connect the first network (Intel 82540EM Gigabit Ehternet Controller) to the appropriate turtlebot network and the second network interface (Red Hat Virtio network device) to internet_acess to be able to surf the web.
+To connect to the robots from the computers in the laboratory you have to connect your windows machine to the appropriate WiFi network \ref{tab:ips}. Switch on the virtual machine and connect the first network (Intel 82540EM Gigabit Ehternet Controller) to the appropriate turtlebot network and the second network interface (Red Hat Virtio network device) to internet\_acess to be able to surf the web.
 
 To check if the connection is properly done, first we open an ssh connection to the robot:
 \begin{shaded}
@@ -140,13 +140,13 @@ To check if the connection is properly done, first we open an ssh connection to 
 		\item[\$] ssh ROBOT\_NAME
 	\end{itemize}
 \end{shaded}
-where ROBOT\_NAME is \textttt{turtlebot#} (example: turtlebot1). There, we run a roscore. To set up the desktop terminal to work with that specific turtlebot type:
+where ROBOT\_NAME is \texttt{turtlebot\#} (example: turtlebot1). There, we run a roscore. To set up the desktop terminal to work with that specific turtlebot type:
 \begin{shaded}
 	\begin{itemize}
-		\item[\$] turtlebot#
+		\item[\$] turtlebot\#
 	\end{itemize}
 \end{shaded}
-where # is the number of the turtlebot you are going to use. This will change your \texttt{ROS\_MASTER\_URI} to the specified robot. Finally on the desktop run:
+where \# is the number of the turtlebot you are going to use. This will change your \texttt{ROS\_MASTER\_URI} to the specified robot. Finally on the desktop run:
 \begin{shaded}
 	\begin{itemize}
 		\item[\$] rostopic list
@@ -220,13 +220,40 @@ In order to navigate the robot autonomously on that map launch (on the robot):
 and close the teleoperation. If you have closed Rviz on your workstation use the same command as for the mapping to open it again. Now click on "2D Pose Estimate" and click where the robot is within the map (click for the position, and point for the direction). Now tell the robot where to go using "2D Nav Goal". Capture the screen while the robot is computing the trajectory for the report.
 
 \subsection{Follower}
-The last tutorial is a funny function for Turtlebot: the follower package. Run (on the robot):
+The last tutorials are two funny function for Turtlebot: the follower package and the panorama one. For the follower, run (on the robot):
 \begin{shaded}
 	\begin{itemize}
 		\item[\$] roslaunch turtlebot\_follower follower.launch
 	\end{itemize}
 \end{shaded}
 Now stand in front of the robot and move, it should follow you if you are not moving fast.
+
+For the panorama package run (on the robot):
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] roslaunch turtlebot\_panorama panorama.launch
+	\end{itemize}
+\end{shaded}
+now you can start the panorama by publishing the following:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] rostopic pub turtlebot\_panorama/take\_pano std\_msgs/Empty
+	\end{itemize}
+\end{shaded}
+or calling the following service:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] rosservice call turtlebot\_panorama/take\_pano 0 360.0 30.0 0.3
+	\end{itemize}
+\end{shaded}
+it can also be stopped using either one of the following calls:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] rostopic pub turtlebot\_panorama/stop\_pano std\_msgs/Empty
+		\item[\$] rosservice call turtlebot\_panorama/take\_pano 2 360.0 30.0 0.3
+	\end{itemize}
+\end{shaded}
+capture a panorama for the report.
 
 \subsection{Turtlebot driver}
 Along with the lab documentation you can find a ROS package called \texttt{lab1\_turtlebot}. This package contains the script where the lab programming will be done. Please modify the driver.py (\texttt{lab1\_turtlebot/src/driver.py}) in order to be able to make the Turtlebot go to a given position. For this purpose, please modify the constructor of the driver class where the definition of the subscriber, publisher and velocity message are missing. You will have to modify also the functions \texttt{read\_position}, which stores the position received on a message to the class variables, and \texttt{compute\_velocity} where the velocity message is created.
@@ -273,6 +300,6 @@ and will be passed as an argument called \texttt{file} to the launch file. Pleas
 
 \section{Lab report}
 
-Write a brief report (maximum 2-3 pages) explaining your solution and problems faced. Include the final \texttt{driver.py} file. If you have done the optional part, please submit the new launch file also.
+Upload a zip file containing the report (2-3 pages in pdf format) as well as the final \texttt{driver.py} file. If you have done the optional part, please submit the new launch file also.
 
 \end{document}
