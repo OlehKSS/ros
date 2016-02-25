@@ -38,3 +38,9 @@ rosdoc_lite .
 ~~~~
 
 The documentation lies on `doc/html/index.html`
+
+### Problems ###
+
+`roscore` is not starting.
+
+Add to your `.bashrc`: `export LC_ALL=C`
