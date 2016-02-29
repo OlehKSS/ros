@@ -43,4 +43,8 @@ The documentation lies on `doc/html/index.html`
 
 `roscore` is not starting.
 
-Add to your `.bashrc`: `export LC_ALL=C`
+* Add `export LC_ALL=C` to your `.bashrc` file
+
+`rviz` segmentation fault in virtual machine
+
+* Call `export LIBGL_ALWAYS_SOFTWARE=1` before funning rviz
