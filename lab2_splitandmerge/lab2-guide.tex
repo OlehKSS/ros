@@ -42,7 +42,7 @@
 
 \section{Introduction}
 
-This lab is designed to learn how to use extract line features from point data provided as points $(x,y)$ in the plane, that have been projected from a \texttt{sensor\_msgs/LaserScan} in the bagfile dataset. The Split \& Merge algorithm explained in the attached scientific paper will be the base of its implementation.
+This lab is designed to learn how to extract line features from point data. The data is extracted from the \texttt{sensor\_msgs/LaserScan} messages saved in a bagfile dataset and are converted to $(x,y)$ points in a 2D plane. Your goal is to create an algorithm that creates lines from the given points. The Split \& Merge algorithm explained in the attached scientific paper will be the base of its implementation.
 
 The resulting algorithm will be used on the following labs as a base for feature extraction in Particle Filter, Extended Kalman Filter and Simultaneous Localization and Mapping. 
 
@@ -75,13 +75,13 @@ The ROS package \texttt{lab2\_splitandmerge} (from the metapackage \texttt{proba
     roslaunch lab2_splitandmerge lab2_splitandmerge.launch
 \end{verbatim}
 
-This will playback the data recorded into the bagfile \texttt{probabilistic\_basics/bags/dataset2.bag} and two nodes. One will handle the odometry of the robot (\texttt{lab2\_splitandmerge/src/odometrynode.py}) and the other one handling the laser scan data (\texttt{lab2\_splitandmerge/src/splitandmergenode.py}).
+This will playback the data recorded into the bagfile \texttt{probabilistic\_basics/bags/dataset3.bag} and two nodes. One will handle the odometry of the robot (\texttt{lab2\_splitandmerge/src/odometrynode.py}) and the other one handling the laser scan data (\texttt{lab2\_splitandmerge/src/splitandmergenode.py}).
 
 As you can see the dummy Split \& Merge algorithm implemented, only provides lines from the first to the last point of each scan without any other computation. Also you can observe how
 the odometry is not perfect and the accumulation of the scans does not represent properly the map (Fig.~\ref{map}).
 
 \begin{center}
-	\includegraphics[width=0.50\textwidth]{lab2-scans}
+	\includegraphics[width=0.5\textwidth]{scans_dataset3}
 	\captionof{figure}{All points plotted with respect to odometry (white) and the line from the Split \& Merge.}
 	\label{map}
 \end{center}
@@ -92,12 +92,14 @@ For viewing properly each scan in Rviz, decrease the \texttt{LaserScan} decay ti
 
 \section{Optional}
 \begin{itemize}
-    \item Test the algorithm with both datasets \texttt{probabilistic\_basics/bags/dataset2.bag} (the one by default) and \texttt{probabilistic\_basics/bags/dataset1.bag}.
+    \item Test the algorithm with both datasets \texttt{probabilistic\_basics/bags/dataset3.bag} (the one by default) and \texttt{probabilistic\_basics/bags/dataset2.bag}.
+    
+    (You will need to modify the file:    \texttt{launch/lab2\_splitandmerge.launch}).
     \item Represent all the lines that have been obtained by the Split \& Merge algorithm in a single image, showing the discrepancies caused by the odometry.
 \end{itemize}
 
 \section{Lab report}
 
-Write a brief report (to be submitted in a pdf of maximum 2 pages) explaining your solution and problems faced. Include only the final \texttt{splitandmerge.py} file for us to test. If you have tested it with both datasets and different parameters are needed leave the \texttt{splitandmerge.py} with the parameters for \texttt{dataset2.bag} and report the ones used for \texttt{dataset1.bag} in the submitted pdf. The deadline for the submission of this lab is March 16th at 23:55.
+Write a brief report (to be submitted in a pdf of maximum 3 pages) explaining your solution and problems faced. Include only the final \texttt{splitandmerge.py} file for us to test. If you have tested it with both datasets and different parameters are needed leave the \texttt{splitandmerge.py} with the parameters for \texttt{dataset3.bag} and report the ones used for \texttt{dataset2.bag} in the submitted pdf. The deadline for the submission of this lab is March 14th at 23:55.
 
 \end{document}
