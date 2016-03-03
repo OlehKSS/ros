@@ -63,7 +63,7 @@ Upgrade to hydro or indigo your ROS distribution (if you have newer versions the
 
 After installing the hydro version and all the Turtlebot 2 packages follow this instructions:
 \begin{itemize}
-	\item Run \textit{roslaunch turtlebot\_gazebo turtlebot\_empty\_world.launch}. This package is the one that starts the robot simulation within the Gazebo simulator.
+	\item Run \textit{roslaunch turtlebot\_gazebo turtlebot\_empty\_world.launch}. This package is the one that starts the robot simulation within the Gazebo simulator. If you are using indigo distribution use \textit{turtlebot\_world.launch}
 	\item Add the Willow garage model to the gazebo simulator (place it so the robot is inside the building). You will have the model available after a while in the insert tab.
 	\item Run \textit{roslaunch turtlebot\_teleop keyboard\_teleop.launch} in a new terminal. Drive the robot around using the keys indicated in the terminal.
 	\item Run \textit{roslaunch turtlebot\_gazebo gmapping\_demo.launch} and \textit{roslaunch turtlebot\_rviz\_launchers \\ view\_navigation.launch} in two new terminals. Drive the robot around and build a map. Save a screen shot of Rviz where a map of at least two rooms can be seen (the visualizer, not the simulator) and submit it through the Moodle before the day of the lab.
@@ -253,7 +253,12 @@ it can also be stopped using either one of the following calls:
 		\item[\$] rosservice call turtlebot\_panorama/take\_pano 2 360.0 30.0 0.3
 	\end{itemize}
 \end{shaded}
-capture a panorama for the report.
+capture a panorama for the report. To view the panorama run:
+\begin{shaded}
+	\begin{itemize}
+		\item[\$] rosrun image\_view image\_view image:=/turtlebot\_panorama/panorama
+	\end{itemize}
+\end{shaded}
 
 \subsection{Turtlebot driver}
 Along with the lab documentation you can find a ROS package called \texttt{lab1\_turtlebot}. This package contains the script where the lab programming will be done. Please modify the driver.py (\texttt{lab1\_turtlebot/src/driver.py}) in order to be able to make the Turtlebot go to a given position. For this purpose, please modify the constructor of the driver class where the definition of the subscriber, publisher and velocity message are missing. You will have to modify also the functions \texttt{read\_position}, which stores the position received on a message to the class variables, and \texttt{compute\_velocity} where the velocity message is created.
