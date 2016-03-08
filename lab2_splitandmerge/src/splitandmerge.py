@@ -107,7 +107,7 @@ def merge(lines, dist_thres, ang_thres):
     '''
     # No data received
     if lines is None:
-        return None
+        return np.array([])
         
     # Check and merge similar consecutive lines
     #i = 0
