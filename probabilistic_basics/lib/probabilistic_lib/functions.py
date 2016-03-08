@@ -53,7 +53,7 @@ def publish_uncertainty(p, pub, x, y, z):
 
 ###############################################################################
 def publish_lines(lines, pub, frame='world', ns='none', time=None,
-                  color=(1, 0, 0)):
+                  color=(1, 0, 0),marker_id=0):
     """
     Publish lines from an array of shape (N, 4) as a Marker message.
 
@@ -72,7 +72,7 @@ def publish_lines(lines, pub, frame='world', ns='none', time=None,
     msg.header.stamp = time if time is not None else rospy.Time.now()
     msg.header.frame_id = frame
     msg.ns = ns
-    msg.id = 0
+    msg.id = marker_id
     msg.type = msg.LINE_LIST
     msg.action = msg.ADD
     msg.pose.position.x = 0.0
