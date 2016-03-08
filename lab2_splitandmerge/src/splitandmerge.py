@@ -80,7 +80,19 @@ def split(points, split_thres, inter_thres, min_points, first_pt, last_pt):
             #
             # Check interpoint distance threshold
             #if ... > inter_thres:
-            #    return None
+                #Split line
+                #prev = split(points, split_thres, inter_thres, min_points, ...)
+                #post = split(points, split_thres, inter_thres, min_points, ...)
+               
+                # Return results of sublines
+                #if prev is not None and post is not None:
+                    #return np.vstack((prev, post))
+                #elif prev is not None:
+                    #return prev
+                #elif post is not None:
+                    #return post
+                #else:
+                    #return None
         
         # It is a good line
         #return np.array([[x1, y1, x2, y2]])
