@@ -21,7 +21,7 @@ import numpy as np
 from tf.transformations import euler_from_quaternion
 
 # Custom libraries
-from probabilistic_lib.functions import publish_lines, get_map, get_particle_msgs, yaw_from_quaternion, angle_wrap
+from probabilistic_lib.functions import publish_lines, get_map, get_dataset3_map, get_particle_msgs, yaw_from_quaternion, angle_wrap
 from particle_filter import ParticleFilter
 
 #===============================================================================
@@ -31,8 +31,7 @@ class LocalizationNode(object):
     '''
     
     #===========================================================================
-    def __init__(self, odom_lin_sigma=0.025, odom_ang_sigma=np.deg2rad(2),
-                        meas_rng_noise=0.2,  meas_ang_noise=np.deg2rad(10)):
+    def __init__(self, odom_lin_sigma=0.025, odom_ang_sigma=np.deg2rad(2), meas_rng_noise=0.2,  meas_ang_noise=np.deg2rad(10), x_init=0, y_init=0, theta_init=0):
         '''
         Initializes publishers, subscribers and the particle filter.
         '''
@@ -67,7 +66,7 @@ class LocalizationNode(object):
         self.lines = None
         
         # Particle filter
-        self.part_filter = ParticleFilter(get_map(), 500, odom_lin_sigma,                   odom_ang_sigma, meas_rng_noise, meas_ang_noise)
+        self.part_filter = ParticleFilter(get_dataset3_map(), 500, odom_lin_sigma, odom_ang_sigma, meas_rng_noise, meas_ang_noise, x_init, y_init, theta_init)
     
     #===========================================================================
     def odom_callback(self, msg):
@@ -191,7 +190,8 @@ class LocalizationNode(object):
             
             # Update and resample filter
             self.part_filter.weight(lines)
-            self.part_filter.resample()
+            if self.part_filter.moving == True and self.part_filter.n_eff<self.part_filter.num/2.0:
+                self.part_filter.resample()
             
         # Publish results
         if self.pub:
@@ -208,7 +208,7 @@ class LocalizationNode(object):
             time = rospy.Time.now()
             
             # Map of the room
-            map_lines = get_map()
+            map_lines = get_dataset3_map()
             publish_lines(map_lines, self.pub_map, frame='/world', ns='map',
                           color=(0,1,0))
             
@@ -238,7 +238,8 @@ if __name__ == '__main__':
     node = LocalizationNode(odom_lin_sigma = 0.025,
                             odom_ang_sigma = np.deg2rad(2),
                             meas_rng_noise = 0.2,
-                            meas_ang_noise = np.deg2rad(10))
+                            meas_ang_noise = np.deg2rad(10),
+                            x_init=0, y_init=0, theta_init=0)
     # Filter at 10 Hz
     r = rospy.Rate(10)
     

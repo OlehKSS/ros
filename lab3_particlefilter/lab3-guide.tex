@@ -63,12 +63,12 @@ The folder named \texttt{lab3\_particlefilter} contains the code for running thi
     roslaunch lab3_particlefilter particle_filter.launch
 \end{verbatim}
 
-As you can see the dummy Particle Filter algorithm implemented, only initializes the particles along the extension of the map, nothing else. The three parts of the filter that must be implemented are:
+As you can see the dummy Particle Filter algorithm implemented, only initializes the particles along a given extension of the map, nothing else. The three parts of the filter that must be implemented are:
 
 \begin{description}
     \item[Prediction] Compute the new position $(x, y, \theta)$ of the particles given an odometry measurement $(\Delta x, \Delta y, \Delta \theta )$ in the vehicle frame. Do not forget to add the odometry Gaussian noise in the increments.
     
-    \item[Weighting] Compute the weight of each particle by comparing the lines obtained from the measurements with the lines of the given map. To be compared, the lines have to be transformed from the form [x1 y1 x2 y2] to the representation [range angle] defined by the shortest distance from the origin to the line (perpendicular distance) being the range, and the angle of this range seen from the origin (Fig.~\ref{repr}).
+    \item[Weighting] Compute the weight of each particle by comparing the lines obtained from the measurements with the lines of the given map. To be compared, the lines have to be transformed from the form [x1 y1 x2 y2] to the representation [range angle] defined by the shortest distance from the origin to the line (perpendicular distance) being the range, and the angle of this range seen from the origin (Fig.~\ref{repr}). (The function \textit{get\_polar\_line} can be very useful).
     
     \begin{center}
         \includegraphics[width=0.25\textwidth]{pict/lab3-repr}
@@ -80,9 +80,9 @@ As you can see the dummy Particle Filter algorithm implemented, only initializes
     \begin{equation}
         w = \frac{1}{\sigma \sqrt{2 \pi}} \exp \left[ - \frac{(x - \mu)^2}{2 \sigma^2} \right]
     \end{equation}
-    being $x$ the measured value (range or angle), $\mu$ the expected value (extracted from given map lines) and $\sigma$ the uncertainty of the measurement. Since range and angle uncertainties are independent they can be multiplied to obtain the final weight.
+    being $x$ the measured value (range or angle), $\mu$ the expected value (extracted from given map lines) and $\sigma$ the uncertainty of the measurement. We will consider that range and angle uncertainties are independent so, they can be multiplied to obtain the weight for each measured line.
     
-    Lines measured can be compared to all lines in the map and take the best results or associating them by searching the most likely one and then computing the weight. Remember that map lines are represented on the world frame and the measured lines in the robot frame (each particle own frame).
+    Lines measured can be compared to all lines in the map and take the best results. Remember that map lines are represented on the world frame and the measured lines in the robot frame (each particle own frame). When multiple lines are sensed, we consider them independent to compute a final weight for each particle.
     
     \item[Resampling] Systematic resampling, as explained in lectures, will be used in this lab.
 \end{description}
@@ -101,6 +101,6 @@ Improve the localization by taking into account if the segments extracted from t
 %===============================================================================
 \section{Lab report}
 
-Write a brief report (maximum 2 pages) explaining your solution and problems faced. Include the final code in the zip file (not in the report).
+Write a brief report (maximum 3 pages) explaining your solution and problems faced. Include the final code in the zip file (not in the report).
 
 \end{document}

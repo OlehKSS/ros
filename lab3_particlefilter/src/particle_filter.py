@@ -16,7 +16,7 @@ class ParticleFilter(object):
     
     #===========================================================================
     def __init__(self, room_map, num, odom_lin_sigma, odom_ang_sigma, 
-                 meas_rng_noise, meas_ang_noise):
+                 meas_rng_noise, meas_ang_noise,x_init,y_init,theta_init):
         '''
         Initializes the particle filter
         room_map : an array of lines in the form [x1 y1 x2 y2]
@@ -41,11 +41,14 @@ class ParticleFilter(object):
         map_ymin = np.min(self.map[:, 1])
         map_ymax = np.max(self.map[:, 1])
         
-        # Particle initialization
+        # Particle initialization arround starting point
         self.p_wei = 1.0 / num * np.ones(num)
-        self.p_ang = 2 * np.pi * np.random.rand(num)
-        self.p_xy  = np.vstack(( map_xmin + (map_xmax - map_xmin) * np.random.rand(num),
-                                 map_ymin + (map_ymax - map_ymin) * np.random.rand(num) ))
+        self.p_ang =2 * np.pi * np.random.rand(num)
+        self.p_xy  = np.vstack(( x_init+ 1*np.random.rand(num)-0.5,
+                                 y_init+ 1*np.random.rand(num)-0.5 ))
+        #Flags for resampling                         
+        self.moving=False
+        self.n_eff=0 #Initialize Efficent number as 0
     
     #===========================================================================
     def predict(self, odom):
@@ -53,20 +56,27 @@ class ParticleFilter(object):
         Moves particles with the given odometry.
         odom: incremental odometry [delta_x delta_y delta_yaw] in the vehicle frame
         '''
-        # TODO: code here!!
-        # Add Gaussian noise to odometry measures
-        # .... np.random.randn(...)
-        #
-        
-        # Increment particle positions in correct frame
-        #self.p_xy +=
-        #
-        #
-        #
+        #Check if we have moved from previous reading.
+        if odom[0]==0 and odom[1]==0 and odom[2]==0:
+            self.moving=False
+        else:
+            # TODO: code here!!
+            # Add Gaussian noise to odometry measures
+            # .... np.random.randn(...)
+            #
+            
+            # Increment particle positions in correct frame
+            #self.p_xy +=
+            #
+            #
+            #
 
-        # Increment angle
-        #self.p_ang += ...
-        #self.p_ang = angle_wrap(self.p_ang)        
+            # Increment angle
+            #self.p_ang += ...
+            #self.p_ang = angle_wrap(self.p_ang)
+            
+            #Update flag for resampling
+            self.moving=True     
     
     #===========================================================================
     def weight(self, lines):
@@ -110,6 +120,8 @@ class ParticleFilter(object):
             
         # Normalize weights
         self.p_wei /= np.sum(self.p_wei)
+        # TODO: Compute efficient number
+        self.n_eff=0.0
         
     #===========================================================================
     def resample(self):

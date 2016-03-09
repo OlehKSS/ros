@@ -1,7 +1,9 @@
 <launch>
     <!-- Source data -->
     <include file="$(find probabilistic_basics)/launch/basics.launch">
-        <arg name="dataset2" value="false"/>
+	<arg name="dataset3" default="true"/>
+	<arg name="pause" default="false"/>
+    <arg name="frequency" default="1.0"/>
     </include>
     
     <!-- RViz -->
