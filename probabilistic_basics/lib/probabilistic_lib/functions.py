@@ -273,6 +273,10 @@ def state_inv_jacobian(x):
     J[1, 1] = -cth
     J[1, 2] = x[0]*cth - x[1]*sth
     return J
+    
+########################################################################
+def compInv(x):
+    return state_inv(x),state_inv_jacobian(x)
 
 
 ########################################################################
@@ -483,12 +487,16 @@ def get_ekf_msgs(ekf):
                 aux = np.zeros((1, 4))
                 if np.abs(np.abs(phi)-np.pi/2) < np.deg2rad(45):
                     # Horizontal line
-                    aux[0, 0] = -1
+                    aux[0, 0] = -5
                     aux[0, 2] = 5
+                    aux[0, 1] = polar2y(plline, aux[0, 0])
+                    aux[0, 3] = polar2y(plline, aux[0, 2])
                 else:
                     # Vertical line
-                    aux[0, 0] = rho-1.5
-                    aux[0, 2] = rho+1.5
+                    aux[0, 1] = -5
+                    aux[0, 3] = 5
+                    aux[0, 0] = polar2x(plline, aux[0, 1])
+                    aux[0, 2] = polar2x(plline, aux[0, 3])
 
                 aux[0, 1] = polar2y(plline, aux[0, 0])
                 aux[0, 3] = polar2y(plline, aux[0, 2])
@@ -517,6 +525,25 @@ def polar2y(line, x):
     m = -cos/sin
     return m*(x-x0) + y0
 
+########################################################################
+def polar2x(line, y):
+    """
+    Compute the value of y in a line given x.
+
+    Given a line in polar coordinates and the x value of a point computes
+    its y value.
+
+    :param numpy.ndarray line: the line as [rho, theta].
+    :param float x: the value in x coordinates.
+    :returns: the value in y coordinates.
+    :rtype: :py:obj:`float`
+    """
+    sin = np.sin(line[1])
+    cos = np.cos(line[1])
+    x0 = line[0] * cos
+    y0 = line[0] * sin
+    m = -cos/sin
+    return (y-y0)/m+x0
 
 ########################################################################
 def get_polar_line(line, odom=[0.0, 0.0, 0.0]):

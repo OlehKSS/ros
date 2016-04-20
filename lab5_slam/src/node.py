@@ -23,7 +23,7 @@ import numpy as np
 #from probabilistic_basics.msg import IncrementalOdometry2D
 
 # Custom libraries
-from probabilistic_lib.functions import publish_lines, get_map, get_ekf_msgs, yaw_from_quaternion, angle_wrap, comp
+from probabilistic_lib.functions import publish_lines, get_map, get_dataset3_map, get_ekf_msgs, yaw_from_quaternion, angle_wrap, comp
 from ekf_slam import EKF_SLAM
 
 #===============================================================================
@@ -69,8 +69,18 @@ class LocalizationNode(object):
         self.pub = False
         
         # Ground truth map
-#        self.map = get_map(0.8,0.3,-0.03)    
-        self.map = get_map()
+        dataset = rospy.get_param("~dataset",None)
+        if dataset == 1:
+            self.map = get_map()
+            x0 = 0.8-0.1908
+            y0 = 0.3+0.08481
+            theta0 = -0.034128
+        elif dataset == 2:
+            self.map = np.array([])
+        elif dataset == 3:
+            self.map = get_dataset3_map()
+        else:
+            self.map = np.array([])
         
         # Initial state
         self.x0 = np.array([x0,y0,theta0])        
@@ -117,8 +127,8 @@ class LocalizationNode(object):
                                    time = msg.header.stamp,
                                    child = '/base_footprint',
                                    parent = '/odom')
-        self.tfBroad.sendTransform(translation = (self.x0[0]-0.1908,self.x0[1]+0.08481,0),
-                                   rotation = tf.transformations.quaternion_from_euler(0,0,self.x0[2]-0.034128), 
+        self.tfBroad.sendTransform(translation = (self.x0[0],self.x0[1],0),
+                                   rotation = tf.transformations.quaternion_from_euler(0,0,self.x0[2]), 
                                    time = msg.header.stamp,
                                    child = '/odom',
                                    parent = '/world')
@@ -242,7 +252,7 @@ if __name__ == '__main__':
     
     # ROS initializzation
     rospy.init_node('localization')
-    node = LocalizationNode(x0=0.8,y0=0.3,theta0=0,
+    node = LocalizationNode(x0=0,y0=0,theta0=0,
                             odom_lin_sigma = 0.0025,
                             odom_ang_sigma = np.deg2rad(1),
                             meas_rng_noise = 0.5,

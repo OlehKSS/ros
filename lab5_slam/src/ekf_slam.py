@@ -31,7 +31,7 @@ class EKF_SLAM(object):
         self.odom_ang_sigma = odom_ang_sigma
         self.meas_rng_noise = meas_rng_noise
         self.meas_ang_noise = meas_ang_noise
-        self.chi_thres = 0.103 # TODO chose your own value
+        self.chi_thres = 0 # TODO chose your own value
        
         # Odometry uncertainty 
         self.Qk = np.array([[ self.odom_lin_sigma**2, 0, 0],\
