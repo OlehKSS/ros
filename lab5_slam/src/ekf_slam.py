@@ -166,6 +166,7 @@ class EKF_SLAM(object):
         world frame
         '''
         # Decompose transformation
+        # Decompose transformation
         x_x = tf[0]
         x_y = tf[1]
         x_ang = tf[2]  
@@ -173,18 +174,12 @@ class EKF_SLAM(object):
         # Compute the new phi
         phi = angle_wrap(line[1] + x_ang)
         
-        # Auxiliar computations
-        sqrt2 = x_x**2+x_y**2
-        sqrt = np.sqrt(sqrt2)
-        atan2 = np.arctan2(x_y,x_x)
-        sin = np.sin(atan2 - phi)
-        cos = np.cos(atan2 - phi)
-        
-        # Compute the new rho
-        rho = line[0] + sqrt* cos  
-        if rho <0:
-            rho = -rho
-            phi = angle_wrap(phi+pi)         
+        rho_ = line[0] + x_x * np.cos(phi) + x_y * np.sin(phi)
+        sign = 1
+        if rho_ <0:
+            rho_ = -rho_
+            phi = angle_wrap(phi+pi)   
+            sign = -1
         
         # Allocate jacobians
         H_tf = np.zeros((2,3))
