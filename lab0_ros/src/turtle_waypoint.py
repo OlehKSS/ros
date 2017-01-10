@@ -1,86 +1,97 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('lab0_ros')
 import rospy
 
-#For command line arguments
-import sys
-#For atan2
-import math
+import sys  # command line arguments argv
+import math  # atan2
 
-#TODO: Import the messages we need
-##
-##
+# TODO: Import the messages we need
+# import ...
+# import ...
 
-#Initialization of turtle position
-x=None
-y=None
-theta=None
 
-#Position tolerance for both x and y
-tolerance=0.1
-#Have we received any pose msg yet?
-gotPosition=False
+class TurtleWaipoint(object):
+    """Class to guide the turtle to the specified waypoint."""
 
-def callback(pose_msg):
-    global x,y,theta,gotPosition
-    #TODO:Store the position in x,y and theta variables.
-    ##
-    ##
-    ##
-    ##
-    ##
-    gotPosition=True
+    def __init__(self, waypoint_x=None, waypoint_y=None):
+        """Class constructor."""
+        # Init all variables
+        # Current turtle position
+        self.x = None
+        self.y = None
+        self.theta = None
+        # Tolerance to reach waypoint
+        self.tolerance = 0.1
+        # A position was received
+        self.got_position = False
+        # Reached position
+        self.finished = False
 
-def waypoint():
-    global gotPosition
-    #TODO: Define the pulisher: Name of the topic. Type of message
-    #
+        # ROS init
+        rospy.init_node('turtle_waypoint')
+        # TODO: Define pulisher: topic name, message type
+        # self.pub = rospy.Publisher(...)
+        # TODO: Define subscriber: topic name, message type, function callback
+        # self.sub = rospy.Subscriber(...)
 
-    #Name of the node
-    rospy.init_node('turtle_waypoint')
-    #TODO: Define the subscriber: Name of the topic. Type of message. Callback function
-    #
+        # Retrieve waypoint
+        self.waypoint_x = waypoint_x
+        self.waypoint_y = waypoint_y
+        if waypoint_x is None or waypoint_y is None:
+            # No waypoint specified => look at the param server
+            if False:  # TODO: change for the correct expression
+                print("Waypoint found in param server")
+                # TODO: Save params from param server
+                self.waypoint_x = 0  # TODO: change for the correct expression
+                self.waypoint_y = 0  # TODO: change for the correct expression
+            else:
+                # No waypoint in param server => finish
+                print("No waypoint found in param server")
+                exit(1)
+        # Show the waypoint
+        print('Heading to: {:.2f}, {:.2f}'.format(self.waypoint_x,
+                                                  self.waypoint_y))
 
-    #Has the turtle reach position?
-    finished=False
-    #If the point hasn't been specified in a command line:
-    if(len(sys.argv)!=3):
-        print('X and Y values not set or not passed correctly. Looking for default parameters.')
-        #TODO: If ROS parameters default_x and default_y exist:
-        if True: #Change this for the correct expression
-            #TODO: Save them into this variables
-            x_desired=0 #Change this for the correct expression
-            y_desired=0 #Change this for the correct expression
-            print('Heading to: %f,%f' %(x_desired, y_desired))
+    def callback(self, msg):
+        """Saves the tutle position when a message is received."""
+        # TODO: store the position in self.x, self.y and self.theta variables.
+        # self.x = ...
+        # self.y = ...
+        # self.theta = ...
+        self.got_position = True
+
+    def iterate(self):
+        """Keeps sending control commands to turtle until waypoint reached."""
+        if self.finished:
+            print('Waypoint reached')
+            exit(0)
         else:
-            print('Default values parameters not set!. Not moving at all')
-            finished=true
-    else:
-        #Save the command line arguments.
-        x_desired=float(sys.argv[1])
-        y_desired=float(sys.argv[2])
-        print('Heading to: %f,%f' %(x_desired, y_desired))
+            # We know where we are
+            if self.got_position:
+                #
+                #
+                if True:  # TODO: change for the correct expression
+                    # Waypoint reached
+                    self.finished = True
+                else:
+                    # Waypoint not reached yet
+                    # TODO: Send a velocity command towards waypoint
+                    #
+                    math.atan2(1, 0)  # TODO: delete this line
+                    #
+                    #
+                    # self.pub.publish(...)
 
-    while not rospy.is_shutdown() and not finished:
-        if(gotPosition):
-            #TODO: Send a velocity command for every loop until the position is reached within the tolerance.
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            if True: #Change for the correct expression
-                finished=True        
-
-        #Publish velocity commands every 0.3 sec.
-        rospy.sleep(0.3)
 
 if __name__ == '__main__':
-    try:
-        waypoint()
-    except rospy.ROSInterruptException:
-        pass
+    # Check commandline inputs
+    if not len(sys.argv) == 3:
+        # No input waypoint specified
+        print('No waypoint specified in commandline')
+        node = TurtleWaipoint()
+    else:
+        node = TurtleWaipoint(float(sys.argv[1]), float(sys.argv[2]))
+    # Run forever
+    while not rospy.is_shutdown():
+        node.iterate()
+        rospy.sleep(0.3)
+    print('\nROS shutdown')
