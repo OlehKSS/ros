@@ -6,8 +6,8 @@ Remember to pull the repo before starting any prelab or lab session.
 
 ### Requeriments ###
 
-* [Ubuntu 14.04 LTS](http://releases.ubuntu.com/14.04/)
-* [ROS Indigo](http://wiki.ros.org/indigo/Installation/Ubuntu)
+* [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/)
+* [ROS Kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 * Clone this repo in your catkin workspace and compile it:
 
 ~~~~
