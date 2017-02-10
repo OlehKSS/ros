@@ -28,7 +28,7 @@
 %\quad	 a really large space
 %\qquad	 a huge space
 %\!	 a negative space (moves things back to the left)
-        
+
 \begin{document}
 
 \marginsize{2cm}{2cm}{2cm}{2cm}
@@ -42,7 +42,7 @@
 
 \section{The goal}
 
-The goal of this lab session is to get started with the software tools that will be used used during the lab sessions of Probabilistic Robotics, especially ROS. The Robot Operating System (ROS) is a software framework for robot software development. ROS provides libraries and tools to help software developers creating robot applications. It provides hardware abstraction, device drivers, libraries, visualizers, message-passing, package management and more. ROS will be used in the next lab exercises, and so, it is fundamental to understand all the basics given in this session. 
+The goal of this lab session is to get started with the software tools that will be used used during the lab sessions of Probabilistic Robotics, especially ROS. The Robot Operating System (ROS) is a software framework for robot software development. ROS provides libraries and tools to help software developers creating robot applications. It provides hardware abstraction, device drivers, libraries, visualizers, message-passing, package management and more. ROS will be used in the next lab exercises, and so, it is fundamental to understand all the basics given in this session.
 
 \section{Pre-lab: Installing Ubuntu and ROS}
 
@@ -53,10 +53,10 @@ In order to install Ubuntu you can either:
 \begin{enumerate}
     \item (Recomended) Install Ubuntu in a partition alongside your other OS (hard disk install). Make sure that you install the distributions specified below:
     \begin{itemize}
-        \item Ubuntu 14.04 LTS (\href{http://releases.ubuntu.com/14.04/ubuntu-14.04.3-desktop-amd64.iso}{download iso}).
-        \item ROS Indigo Desktop Full install (\href{http://wiki.ros.org/hydro/Installation/Ubuntu}{install instructions}).
+        \item Ubuntu 16.04 LTS (\href{http://releases.ubuntu.com/16.04/ubuntu-16.04-desktop-amd64.iso}{download iso}).
+        \item ROS Kinetic Desktop Full install (\href{http://wiki.ros.org/kinetic/Installation/Ubuntu}{install instructions}).
     \end{itemize}
-    
+
     \item (not recommended) Install Ubuntu in a virtual machine inside your normal OS. In this case you can donwload a \href{https://www.virtualbox.org/wiki/Linux_Downloads}{Virtualbox}  and follow the same installation instruction than the previous point, but this time on the virtual machine. Note that this kind of installation can lead to problems with graphics drivers in some or all labs.
 \end{enumerate}
 
@@ -66,25 +66,25 @@ Now that you have Ubuntu and ROS successfully installed, please follow the most 
 \begin{itemize}
     \item Creating a workspace for catkin.\\
     \url{http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment}
-    
+
     \item Navigating the ROS FileSystem.\\
     \url{http://wiki.ros.org/ROS/Tutorials/NavigatingTheFilesystem}
-    
+
     \item Creating a ROS package.\\
     \url{http://wiki.ros.org/ROS/Tutorials/CreatingPackage}
-    
+
     \item Understanding ROS Nodes.\\
     \url{http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes}
-    
+
     \item Understanding ROS topics.\\
     \url{http://wiki.ros.org/ROS/Tutorials/UnderstandingTopics}
-    
+
     \item Understanding ROS services and Parameters.\\
     \url{http://wiki.ros.org/ROS/Tutorials/UnderstandingServicesParams}
-    
+
     \item Writing a simple Publisher and subscriber (Pyhton).\\
     \url{http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29}
-    
+
     \item Examining the Simple Publisher and Subscriber.\\
     \url{http://wiki.ros.org/ROS/Tutorials/ExaminingPublisherSubscriber}
 \end{itemize}
@@ -132,7 +132,7 @@ Clone the repository of the Probabilistic labs in your workspace. This repositor
     catkin_make
 \end{verbatim}
 \noindent
-Run the node in the turtle{\textunderscore}waypoint package: 
+Run the node in the turtle{\textunderscore}waypoint package:
 \begin{verbatim}
     rosrun lab0_ros turtle_waypoint.py
 \end{verbatim}
