@@ -40,7 +40,7 @@ class EKF(object):
 
         # Pose initialization
         self.xk = np.zeros(3)
-        self.Pk = 0.2*0.2*np.eye(3)  # initial uncertainty of robot state
+        self.Pk = 0.2 * 0.2 * np.eye(3)  # initial uncertainty of robot state
 
     # ==========================================================================
     def predict(self, uk):
@@ -157,15 +157,15 @@ class EKF(object):
         """
         # Compose list of matrices as single matrices
         n = len(Hk_list)
-        H = np.zeros((2*n, 3))
-        v = np.zeros((2*n))
-        S = np.zeros((2*n, 2*n))
-        R = np.zeros((2*n, 2*n))
+        H = np.zeros((2 * n, 3))
+        v = np.zeros((2 * n))
+        S = np.zeros((2 * n, 2 * n))
+        R = np.zeros((2 * n, 2 * n))
         for i in range(n):
-            H[2*i:2*i+2, :] = Hk_list[i]
-            v[2*i:2*i+2] = Vk_list[i]
-            S[2*i:2*i+2, 2*i:2*i+2] = Sk_list[i]
-            R[2*i:2*i+2, 2*i:2*i+2] = Rk_list[i]
+            H[2 * i:2 * i + 2, :] = Hk_list[i]
+            v[2 * i:2 * i + 2] = Vk_list[i]
+            S[2 * i:2 * i + 2, 2 * i:2 * i + 2] = Sk_list[i]
+            R[2 * i:2 * i + 2, 2 * i:2 * i + 2] = Rk_list[i]
 
         # There is data to update
         if not n > 0:

@@ -31,11 +31,11 @@ class LocalizationNode(object):
                  meas_ang_noise, rob2sensor):
         """Initialize publishers, subscribers and the filter."""
         # Publishers
-        self.pub_laser = rospy.Publisher("ekf_laser",  LaserScan, queue_size=2)
+        self.pub_laser = rospy.Publisher("ekf_laser", LaserScan, queue_size=2)
         self.pub_lines = rospy.Publisher("linesekf", Marker, queue_size=2)
         self.pub_odom = rospy.Publisher("predicted_odom", Odometry,
                                         queue_size=2)
-        self.pub_uncertainity = rospy.Publisher("uncertainity",  Marker,
+        self.pub_uncertainity = rospy.Publisher("uncertainity", Marker,
                                                 queue_size=2)
 
         # Subscribers
@@ -129,8 +129,10 @@ class LocalizationNode(object):
                 self.last_odom.pose.pose.orientation)
 
             # Odometry seen from vehicle frame
-            self.uk = np.array([delta_x*np.cos(lyaw) + delta_y*np.sin(lyaw),
-                               -delta_x*np.sin(lyaw) + delta_y*np.cos(lyaw),
+            self.uk = np.array([delta_x * np.cos(lyaw) +
+                                delta_y * np.sin(lyaw),
+                                -delta_x * np.sin(lyaw) +
+                                delta_y * np.cos(lyaw),
                                 funcs.angle_wrap(yaw - lyaw)])
 
             # Flag available
@@ -152,10 +154,10 @@ class LocalizationNode(object):
             # Structure for the lines
             self.lines = np.zeros((len(msg.points) / 2, 4))
 
-            for i in range(0, len(msg.points)/2):
+            for i in range(0, len(msg.points) / 2):
                 # Get start and end points
-                pt1 = msg.points[2*i]
-                pt2 = msg.points[2*i+1]
+                pt1 = msg.points[2 * i]
+                pt2 = msg.points[2 * i + 1]
 
                 # Transform to robot frame
                 pt1R = funcs.comp(self.robot2sensor, [pt1.x, pt1.y, 0.0])
