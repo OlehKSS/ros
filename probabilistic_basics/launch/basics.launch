@@ -24,7 +24,7 @@
             <node pkg="rosbag" type="play" name="rosbag" args="$(arg bfName) --clock --pause -r $(arg frequency)"/>
         </group>
         <group unless="$(arg pause)">
-            <node pkg="rosbag" type="play" name="rosbag" args="$(arg bfName) --clock -r $(arg frequency)"/>
+            <node pkg="rosbag" type="play" name="rosbag" args="$(arg bfName) --clock -d 5 -r $(arg frequency)"/>
         </group>
     </group>
    <group if="$(arg dataset2)">
