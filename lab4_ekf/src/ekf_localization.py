@@ -131,7 +131,7 @@ class EKF(object):
 
             # Minimum distance below threshold
             # if minD < chi_thres:
-            #     print("\t{:.2f} -> {:.2f}".format(minz, minh))
+            #     print("\t{} -> {}".format(minz, minh))
             #     # Append results
             #     associd.append([i, minj])
             #     Hk_list.append(minH)
