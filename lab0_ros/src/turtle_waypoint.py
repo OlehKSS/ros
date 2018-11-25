@@ -4,9 +4,9 @@ import rospy
 import sys  # command line arguments argv
 import math  # atan2
 
-# TODO: Import the messages we need
-# import ...
-# import ...
+import rospy
+from geometry_msgs.msg import Twist
+from turtlesim.msg import Pose
 
 
 class TurtleWaipoint(object):
@@ -25,38 +25,53 @@ class TurtleWaipoint(object):
         self.got_position = False
         # Reached position
         self.finished = False
+        self.abs_vel = 0.75
+
+        self.default_x = rospy.get_param('/default_x', default=None)
+        self.default_y = rospy.get_param('/default_y', default=None)
 
         # ROS init
         rospy.init_node('turtle_waypoint')
-        # TODO: Define pulisher: topic name, message type
-        # self.pub = rospy.Publisher(...)
-        # TODO: Define subscriber: topic name, message type, function callback
-        # self.sub = rospy.Subscriber(...)
+        self.pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+        self.sub = rospy.Subscriber('/turtle1/pose', Pose, self.callback)
+
+        self.vel = Twist()
+        self.vel.linear.x = 0
+        self.vel.linear.y = 0
+        self.vel.linear.z = 0
+        self.vel.angular.x = 0
+        self.vel.angular.y = 0
+        self.vel.angular.z = 0
 
         # Retrieve waypoint
         self.waypoint_x = waypoint_x
         self.waypoint_y = waypoint_y
+
         if waypoint_x is None or waypoint_y is None:
             # No waypoint specified => look at the param server
-            if False:  # TODO: change for the correct expression
+            if self.default_x is not None and self.default_y is not None:
                 print("Waypoint found in param server")
-                # TODO: Save params from param server
-                self.waypoint_x = 0  # TODO: change for the correct expression
-                self.waypoint_y = 0  # TODO: change for the correct expression
+
+                self.waypoint_x = self.default_x
+                self.waypoint_y = self.default_y
             else:
                 # No waypoint in param server => finish
                 print("No waypoint found in param server")
                 exit(1)
         # Show the waypoint
+
         print('Heading to: {:.2f}, {:.2f}'.format(self.waypoint_x,
                                                   self.waypoint_y))
 
     def callback(self, msg):
         """Saves the tutle position when a message is received."""
-        # TODO: store the position in self.x, self.y and self.theta variables.
-        # self.x = ...
-        # self.y = ...
-        # self.theta = ...
+        self.x = msg.x
+        self.y = msg.y
+        self.theta = msg.theta
+
+        if not self.got_position:
+            print("Current position x={0}, y={1}, theta={2}".format(self.x, self.y, self.theta))
+
         self.got_position = True
 
     def iterate(self):
@@ -67,19 +82,21 @@ class TurtleWaipoint(object):
         else:
             # We know where we are
             if self.got_position:
-                #
-                #
-                if True:  # TODO: change for the correct expression
-                    # Waypoint reached
+                dist = math.sqrt((self.waypoint_x - self.x) * (self.waypoint_x - self.x) + 
+                                (self.waypoint_y - self.y) * (self.waypoint_y - self.y))
+                theta = math.atan2((self.waypoint_y - self.y), (self.waypoint_x - self.x))
+
+                if dist < 0.1:
+                    self.vel.linear.x = 0
+                    self.vel.angular.z = 0
+                    self.pub.publish(self.vel)
                     self.finished = True
+                    # if we press Ctrl+C the node will stop
+                    rospy.spin()
                 else:
-                    # Waypoint not reached yet
-                    # TODO: Send a velocity command towards waypoint
-                    #
-                    math.atan2(1, 0)  # TODO: delete this line
-                    #
-                    #
-                    # self.pub.publish(...)
+                    self.vel.linear.x = self.abs_vel
+                    self.vel.angular.z = 4 * (theta - self.theta)
+                    self.pub.publish(self.vel)
 
 
 if __name__ == '__main__':
@@ -93,5 +110,5 @@ if __name__ == '__main__':
     # Run forever
     while not rospy.is_shutdown():
         node.iterate()
-        rospy.sleep(0.3)
+        rospy.sleep(0.05)
     print('\nROS shutdown')
